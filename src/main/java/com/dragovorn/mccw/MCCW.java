@@ -1,35 +1,34 @@
 package com.dragovorn.mccw;
 
-import com.dragovorn.mccw.building.BuildingManager;
+import com.dragovorn.mccw.building.SchematicManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
 public class MCCW extends JavaPlugin {
 
-    private File schematic;
+    private File schematics;
 
-    private BuildingManager buildingManager;
+    private SchematicManager schematicManager;
 
     private static MCCW instance;
 
     @Override
     public void onLoad() {
         instance = this;
-
-        this.buildingManager = new BuildingManager();
+        this.schematicManager = new SchematicManager();
 
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
 
-        this.schematic = new File(this.getDataFolder(), "schematics");
+        this.schematics = new File(this.getDataFolder(), "schematics");
 
-        if (!this.schematic.exists()) {
-            this.schematic.mkdirs();
+        if (!this.schematics.exists()) {
+            this.schematics.mkdirs();
         }
 
-        this.buildingManager.loadSchematics(this.schematic);
+        this.schematicManager.loadSchematics(this.schematics);
     }
 
     @Override
@@ -47,10 +46,10 @@ public class MCCW extends JavaPlugin {
     }
 
     public File getSchematicFolder() {
-        return this.schematic;
+        return this.schematics;
     }
 
-    public BuildingManager getBuildingManager() {
-        return this.buildingManager;
+    public SchematicManager getBuildingManager() {
+        return this.schematicManager;
     }
 }
