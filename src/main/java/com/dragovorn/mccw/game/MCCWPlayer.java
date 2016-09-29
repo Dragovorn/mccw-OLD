@@ -15,10 +15,21 @@ public class MCCWPlayer {
     private long gold;
 
     private int level;
+    private int kills;
+    private int deaths;
 
-    public MCCWPlayer(Player player, int level) {
+    private double exp;
+    private double expNextLevel;
+    private double kda;
+
+    public MCCWPlayer(Player player, int level, int kills, int deaths, double exp, double expNextLevel) {
         this(player);
         this.level = level;
+        this.exp = exp;
+        this.kills = kills;
+        this.deaths = deaths;
+        this.expNextLevel = expNextLevel;
+        this.kda = kills / deaths;
     }
 
     public MCCWPlayer(Player player) {
@@ -26,6 +37,11 @@ public class MCCWPlayer {
         this.networth = 0;
         this.gold = 0;
         this.level = 0;
+        this.kills = 0;
+        this.deaths = 0;
+        this.exp = 0;
+        this.expNextLevel = 1000;
+        this.kda = 0.0;
     }
 
     public void addGold(long gold) {
@@ -58,6 +74,16 @@ public class MCCWPlayer {
         team.join(this);
     }
 
+    public void addExp(double exp) {
+        this.exp += exp;
+
+        updateExpNextLevel();
+    }
+
+    public void updateExpNextLevel() {
+        // use an array to figure what their next value is
+    }
+
     public Player getPlayer() {
         return this.player;
     }
@@ -72,6 +98,26 @@ public class MCCWPlayer {
 
     public int getLevel() {
         return this.level;
+    }
+
+    public int getKills() {
+        return this.kills;
+    }
+
+    public int getDeaths() {
+        return this.deaths;
+    }
+
+    public double getExp() {
+        return this.exp;
+    }
+
+    public double getExpNextLevel() {
+        return this.expNextLevel;
+    }
+
+    public double getKda() {
+        return this.kda;
     }
 
     public ITeam getTeam() {
