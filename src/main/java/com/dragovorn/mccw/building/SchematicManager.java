@@ -17,10 +17,6 @@ public class SchematicManager {
 
     private List<Schematic> schematics;
 
-    private final long delay = 1L;
-
-    private final int blocksPerTime = 1;
-
     public SchematicManager() {
         this.schematics = new ArrayList<>();
     }

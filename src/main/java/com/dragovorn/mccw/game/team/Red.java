@@ -2,7 +2,6 @@ package com.dragovorn.mccw.game.team;
 
 import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.BuildingManager;
-import com.dragovorn.mccw.building.Schematic;
 import com.dragovorn.mccw.exceptions.TeamException;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.util.Message;
@@ -66,6 +65,10 @@ public class Red implements ITeam {
         return this.players;
     }
 
+    private Red outer() {
+        return this;
+    }
+
     private class RedBuildingManager extends BuildingManager {
 
         private List<Building> buildings;
@@ -75,13 +78,20 @@ public class Red implements ITeam {
         }
 
         @Override
-        public void build(Schematic schematic, Location location) {
-            regularBuild(schematic, location);
+        public void build(Building building, Location location) {
+            building.build(this);
+
+            this.buildings.add(building);
         }
 
         @Override
         public List<Building> getBuildings() {
             return this.buildings;
+        }
+
+        @Override
+        public ITeam getTeam() {
+            return Red.this.outer();
         }
     }
 }
