@@ -1,13 +1,22 @@
 package com.dragovorn.mccw.game;
 
+import com.dragovorn.mccw.exceptions.UpgradeException;
+import com.dragovorn.mccw.game.mechanic.kit.Class;
+import com.dragovorn.mccw.game.mechanic.kit.None;
+import com.dragovorn.mccw.game.mechanic.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MCCWPlayer {
 
     private ITeam team;
 
-    // List of upgrades or something
+    private Class clazz;
+
+    private List<Upgrade> upgrades;
 
     private final Player player;
 
@@ -42,6 +51,8 @@ public class MCCWPlayer {
         this.exp = 0;
         this.expNextLevel = 1000;
         this.kda = 0.0;
+        this.clazz = new None();
+        this.upgrades = new ArrayList<>();
     }
 
     public void addGold(long gold) {
@@ -54,9 +65,28 @@ public class MCCWPlayer {
         this.networth -= gold;
     }
 
-    public void buy() { // Upgrade
-        this.gold -= 0; // subtract the upgrade cost
-        // increment upgrade
+    public void buy(String name) {
+        Upgrade ug = null;
+
+        for (Upgrade upgrade : this.upgrades) {
+            if (upgrade.getName().equals(name)) {
+                ug = upgrade;
+            }
+        }
+
+        if (ug == null) {
+            ug = this.clazz.getUpgrade(name);
+        }
+
+        if (ug == null) {
+            throw new UpgradeException(this.player.getName() + " doesn't have upgrade " + name);
+        }
+
+        int index = this.clazz.getUpgrades().indexOf(ug);
+
+        this.gold -= ug.getCosts()[ug.getLevel() - 1];
+        ug.levelup(this);
+        this.clazz.setUpgrade(index, ug);
         update();
     }
 
@@ -129,6 +159,12 @@ public class MCCWPlayer {
     }
 
     private void update() {
-        // update player inventory + effects
+        for (Upgrade upgrade : this.upgrades) {
+            upgrade.onUpdate(this);
+        }
+
+        for (Upgrade upgrade : this.clazz.getUpgrades()) {
+            upgrade.onUpdate(this);
+        }
     }
 }
