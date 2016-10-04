@@ -1,9 +1,11 @@
 package com.dragovorn.mccw;
 
 import com.dragovorn.mccw.building.SchematicManager;
+import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -12,11 +14,17 @@ import java.util.List;
 
 public class MCCW extends JavaPlugin {
 
+    public int[] exp = new int[] {
+            1000, 2000, 3000, 4000
+    };
+
     private File schematics;
 
     private SchematicManager schematicManager;
 
     private List<ITeam> teams;
+
+    private List<MCCWPlayer> players;
 
     private static MCCW instance;
 
@@ -25,6 +33,7 @@ public class MCCW extends JavaPlugin {
         instance = this;
         this.schematicManager = new SchematicManager();
         this.teams = new ArrayList<>();
+        this.players = new ArrayList<>();
 
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
@@ -55,6 +64,20 @@ public class MCCW extends JavaPlugin {
 
     public static MCCW getInstance() {
         return instance;
+    }
+
+    public void registerPlayer(Player player) {
+        this.players.add(new MCCWPlayer(player));
+    }
+
+    public void deregisterPlayer(Player player) {
+        for (int x = 0; x < this.players.size(); x++) {
+            if (this.players.get(x).getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                this.players.remove(x);
+
+                return;
+            }
+        }
     }
 
     public List<ITeam> getTeams() {

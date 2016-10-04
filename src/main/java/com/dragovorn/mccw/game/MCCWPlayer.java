@@ -1,5 +1,6 @@
 package com.dragovorn.mccw.game;
 
+import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.exceptions.UpgradeException;
 import com.dragovorn.mccw.game.mechanic.kit.Class;
 import com.dragovorn.mccw.game.mechanic.kit.None;
@@ -31,17 +32,17 @@ public class MCCWPlayer {
     private double expNextLevel;
     private double kda;
 
-    public MCCWPlayer(Player player, int level, int kills, int deaths, double exp, double expNextLevel) {
+    public MCCWPlayer(Player player, int level, int kills, int deaths, double exp) {
         this(player);
         this.level = level;
         this.exp = exp;
         this.kills = kills;
         this.deaths = deaths;
-        this.expNextLevel = expNextLevel;
+        this.expNextLevel = MCCW.getInstance().exp[level - 1];
         this.kda = kills / deaths;
     }
 
-    public MCCWPlayer(Player player) {
+    public MCCWPlayer(Player player) { // Here is where we resolve the data from the database
         this.player = player;
         this.networth = 0;
         this.gold = 0;
