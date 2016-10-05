@@ -5,10 +5,13 @@ import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
+import com.dragovorn.mccw.utils.Passwords;
+import com.dragovorn.mccw.utils.SQL;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,8 @@ public class MCCW extends JavaPlugin {
 
     private List<MCCWPlayer> players;
 
+    private SQL sql;
+
     private static MCCW instance;
 
     @Override
@@ -34,6 +39,12 @@ public class MCCW extends JavaPlugin {
         this.schematicManager = new SchematicManager();
         this.teams = new ArrayList<>();
         this.players = new ArrayList<>();
+
+        try {
+            this.sql = new SQL("dragovorn.com", 1433, "mccw", "mccw", Passwords.sql);
+        } catch (SQLException | ClassNotFoundException exception) {
+            exception.printStackTrace();
+        }
 
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
