@@ -1,4 +1,4 @@
-package com.dragovorn.mccw.game.mechanic.upgrade;
+package com.dragovorn.mccw.game.shop.upgrade;
 
 import com.dragovorn.mccw.game.MCCWPlayer;
 

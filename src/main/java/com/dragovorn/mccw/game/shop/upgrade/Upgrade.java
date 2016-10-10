@@ -1,25 +1,48 @@
-package com.dragovorn.mccw.game.mechanic.upgrade;
+package com.dragovorn.mccw.game.shop.upgrade;
 
 import com.dragovorn.mccw.game.MCCWPlayer;
+import com.dragovorn.mccw.game.shop.ShopItem;
+import com.dragovorn.mccw.game.shop.kit.Class;
+import com.dragovorn.mccw.utils.RomanNumerals;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
-public abstract class Upgrade {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public abstract class Upgrade implements ShopItem {
 
     private UpgradeType type;
 
     private String name;
 
+    private List<Class> classes;
+
     private int level;
     private int maxLevel;
 
-    public Upgrade(String name, int level, int maxLevel, UpgradeType type) {
+    public Upgrade(String name, int level, int maxLevel, UpgradeType type, Class... classes) {
         this.name = name;
         this.level = level;
         this.maxLevel = maxLevel;
         this.type = type;
+        this.classes = new ArrayList<>(Arrays.asList(classes));
+    }
+
+    @Override
+    public ItemStack getShopItem() {
+        ItemStack stack = new ItemStack(Material.ENCHANTED_BOOK);
+        stack.getItemMeta().setDisplayName(ChatColor.GREEN + this.name + ChatColor.GRAY + " " + RomanNumerals.toRoman(this.level));
+
+        return new ItemStack(Material.ENCHANTED_BOOK);
     }
 
     public void apply(MCCWPlayer player) {
         onApply(player);
+
+        player.getUpgrades().add(this);
     }
 
     public void onHit(MCCWPlayer damager, MCCWPlayer damagee) { }
@@ -57,5 +80,9 @@ public abstract class Upgrade {
 
     public int getMaxLevel() {
         return this.maxLevel;
+    }
+
+    public List<Class> getClasses() {
+        return this.classes;
     }
 }

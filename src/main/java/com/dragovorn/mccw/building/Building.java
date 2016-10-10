@@ -2,14 +2,14 @@ package com.dragovorn.mccw.building;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.exceptions.BuildingException;
+import com.dragovorn.mccw.game.MCCWPlayer;
+import com.dragovorn.mccw.game.shop.ShopItem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Building {
 
@@ -21,7 +21,7 @@ public class Building {
 
     private Location location;
 
-//    private Map<Upgrade, Integer> shop
+    private Map<ShopItem, Integer> shop;
 
     private boolean isShop;
 
@@ -34,6 +34,21 @@ public class Building {
         this.level = level;
         this.schematics = schematics;
         this.blocks = new ArrayList<>();
+        this.shop = new HashMap<>();
+    }
+
+    public void openShop(MCCWPlayer player) {
+        if (!this.isShop) {
+            return;
+        }
+
+        Inventory inventory = Bukkit.createInventory(null, 9, this.name); // make this scale depending on the items in the shop
+
+        int x = 0;
+
+        for (Map.Entry<ShopItem, Integer> entry : this.shop.entrySet()) {
+
+        }
     }
 
     public void build(BuildingManager manager) {
@@ -80,7 +95,9 @@ public class Building {
 
                             if (this.index < size) {
                                 Block block = orderedBlocks.get(this.index);
-                                byte data = schematic.getData()[blocks.get(block)];
+                                int otherIndex = blocks.get(block);
+                                int type = schematic.getBlocks()[otherIndex];
+                                byte data = schematic.getData()[otherIndex];
 
                                 if (!block.getLocation().equals(location)) {
                                     if (data == DyeColor.WHITE.getData()) {
@@ -91,7 +108,7 @@ public class Building {
                                         }
                                     }
 
-                                    buildBlock(block, data);
+                                    buildBlock(block, type, data);
                                 }
 
                                 this.index++;
@@ -107,11 +124,14 @@ public class Building {
         }
     }
 
-    private void buildBlock(Block block, byte data) {
-        block.getLocation().getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getType());
+    private void buildBlock(Block block, int type, byte data) {
+        Material blockType = Material.getMaterial(type);
 
-        block.setType(block.getType(), false);
+        block.getLocation().getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, blockType);
+
+        block.setType(blockType, false);
         block.setData(data, false);
+        this.blocks.add(block);
     }
 
     public void levelup() {

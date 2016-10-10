@@ -10,7 +10,7 @@ public class TestSQL {
 
     @Test
     public void testSQL() throws SQLException, ClassNotFoundException {
-        SQL sql = new SQL("dragovorn.com", 3306, "mccw", "mccw", Passwords.sql);
+        SQL sql = new SQL("dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
 
         Statement statement = sql.getConnection().createStatement();
 

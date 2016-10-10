@@ -1,13 +1,14 @@
-package com.dragovorn.mccw.game.mechanic.kit;
+package com.dragovorn.mccw.game.shop.kit;
 
 import com.dragovorn.mccw.game.MCCWPlayer;
-import com.dragovorn.mccw.game.mechanic.upgrade.Upgrade;
+import com.dragovorn.mccw.game.shop.ShopItem;
+import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Class {
+public abstract class Class implements ShopItem {
 
     private String name;
 

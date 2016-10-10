@@ -2,9 +2,9 @@ package com.dragovorn.mccw.game;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.exceptions.UpgradeException;
-import com.dragovorn.mccw.game.mechanic.kit.Class;
-import com.dragovorn.mccw.game.mechanic.kit.None;
-import com.dragovorn.mccw.game.mechanic.upgrade.Upgrade;
+import com.dragovorn.mccw.game.shop.kit.Class;
+import com.dragovorn.mccw.game.shop.kit.None;
+import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
 import org.bukkit.entity.Player;
 
@@ -153,6 +153,10 @@ public class MCCWPlayer {
 
     public ITeam getTeam() {
         return this.team;
+    }
+
+    public List<Upgrade> getUpgrades() {
+        return this.upgrades;
     }
 
     public boolean isInTeam() {
