@@ -1,12 +1,15 @@
 package com.dragovorn.mccw;
 
+import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.SchematicManager;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
+import com.dragovorn.mccw.listener.BlockPlaceListener;
 import com.dragovorn.mccw.listener.JoinListener;
+import com.dragovorn.mccw.listener.PlayerInteractEntityListener;
 import com.dragovorn.mccw.listener.QuitListener;
 import com.dragovorn.mccw.utils.Passwords;
 import com.dragovorn.mccw.utils.SQL;
@@ -34,6 +37,8 @@ public class MCCW extends JavaPlugin {
     private ImmutableList<ITeam> teams;
 
     private List<MCCWPlayer> players;
+
+    private ImmutableList<Building> buildings;
 
     private SQL sql;
 
@@ -63,6 +68,8 @@ public class MCCW extends JavaPlugin {
         }
 
         this.schematicManager.loadSchematics(this.schematics);
+
+        this.buildings = new ImmutableList.Builder<Building>().add(new Building("Town Hall", true, 1, this.schematicManager.getSchematicByName("townhall"))).build();
     }
 
     @Override
@@ -71,6 +78,8 @@ public class MCCW extends JavaPlugin {
 
         manager.registerEvents(new JoinListener(), this);
         manager.registerEvents(new QuitListener(), this);
+        manager.registerEvents(new BlockPlaceListener(), this);
+        manager.registerEvents(new PlayerInteractEntityListener(), this);
     }
 
     @Override
@@ -79,6 +88,9 @@ public class MCCW extends JavaPlugin {
         this.schematicManager = null;
         this.schematics = null;
         this.teams = null;
+        this.players = null;
+        this.sql = null;
+        this.exp = null;
     }
 
     public static MCCW getInstance() {
@@ -90,9 +102,9 @@ public class MCCW extends JavaPlugin {
     }
 
     public void deregisterPlayer(Player player) {
-        for (int x = 0; x < this.players.size(); x++) {
-            if (this.players.get(x).getPlayer().getUniqueId().equals(player.getUniqueId())) {
-                this.players.remove(x);
+        for (MCCWPlayer players : this.players) {
+            if (players.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                this.players.remove(players);
 
                 return;
             }

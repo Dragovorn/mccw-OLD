@@ -79,9 +79,7 @@ public class Blue implements ITeam {
 
         @Override
         public void build(Building building, Location location) {
-            building.build(this);
-
-            this.buildings.add(building);
+            this.buildings.add(building.build(this, location));
         }
 
         @Override

@@ -4,8 +4,11 @@ import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.shop.ShopItem;
+import com.dragovorn.mccw.utils.Calculator;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,13 +26,14 @@ public class Building {
 
     private Map<ShopItem, Integer> shop;
 
+    private Entity villager;
+
     private boolean isShop;
 
     private int level;
 
-    public Building(String name, Location location, boolean shop, int level, Schematic... schematics) {
+    public Building(String name, boolean shop, int level, Schematic... schematics) {
         this.name = name;
-        this.location = location;
         this.isShop = shop;
         this.level = level;
         this.schematics = schematics;
@@ -37,21 +41,33 @@ public class Building {
         this.shop = new HashMap<>();
     }
 
+    public Building addItem(ShopItem item, int cost) {
+        this.shop.put(item, cost);
+
+        return this;
+    }
+
     public void openShop(MCCWPlayer player) {
         if (!this.isShop) {
             return;
         }
 
-        Inventory inventory = Bukkit.createInventory(null, 9, this.name); // make this scale depending on the items in the shop
+        int slots = Calculator.formToLine(this.shop.size() * 9);
+
+        Inventory inventory = Bukkit.createInventory(null, slots, this.name);
 
         int x = 0;
 
         for (Map.Entry<ShopItem, Integer> entry : this.shop.entrySet()) {
-
+            inventory.setItem(x, entry.getKey().getShopItem());
         }
+
+        player.getPlayer().openInventory(inventory);
     }
 
-    public void build(BuildingManager manager) {
+    public Building build(BuildingManager manager, Location location) {
+        this.location = location;
+
         Schematic schematic = this.schematics[this.level];
 
         final HashMap<Block, Integer> blocks = new HashMap<>();
@@ -108,7 +124,11 @@ public class Building {
                                         }
                                     }
 
-                                    buildBlock(block, type, data);
+                                    if (Material.getMaterial(type) == Material.BEDROCK) {
+                                        villager = location.getWorld().spawnEntity(block.getLocation(), EntityType.VILLAGER);
+                                    } else {
+                                        buildBlock(block, type, data);
+                                    }
                                 }
 
                                 this.index++;
@@ -122,6 +142,8 @@ public class Building {
                 throw new BuildingException(exception);
             }
         }
+
+        return this;
     }
 
     private void buildBlock(Block block, int type, byte data) {
@@ -153,6 +175,10 @@ public class Building {
 
     public Location getLocation() {
         return this.location;
+    }
+
+    public Entity getShopKeeper() {
+        return this.villager;
     }
 
     public boolean isShop() {

@@ -3,7 +3,7 @@ package com.dragovorn.mccw.game.shop.upgrade;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.shop.ShopItem;
 import com.dragovorn.mccw.game.shop.kit.Class;
-import com.dragovorn.mccw.utils.RomanNumerals;
+import com.dragovorn.mccw.utils.Calculator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +23,7 @@ public abstract class Upgrade implements ShopItem {
     private int level;
     private int maxLevel;
 
-    public Upgrade(String name, int level, int maxLevel, UpgradeType type, Class... classes) {
+    Upgrade(String name, int level, int maxLevel, UpgradeType type, Class... classes) {
         this.name = name;
         this.level = level;
         this.maxLevel = maxLevel;
@@ -32,15 +32,24 @@ public abstract class Upgrade implements ShopItem {
     }
 
     @Override
+    public long getCost() {
+        return getCosts()[getLevel()];
+    }
+
+    @Override
     public ItemStack getShopItem() {
         ItemStack stack = new ItemStack(Material.ENCHANTED_BOOK);
-        stack.getItemMeta().setDisplayName(ChatColor.GREEN + this.name + ChatColor.GRAY + " " + RomanNumerals.toRoman(this.level));
+        stack.getItemMeta().setDisplayName(ChatColor.GREEN + this.name + ChatColor.GRAY + " " + Calculator.toRoman(this.level));
 
         return new ItemStack(Material.ENCHANTED_BOOK);
     }
 
     public void apply(MCCWPlayer player) {
         onApply(player);
+
+        if (player.getUpgrades().contains(this)) {
+            player.getUpgrades().remove(this); // maybe require each upgrade to have a uid
+        }
 
         player.getUpgrades().add(this);
     }

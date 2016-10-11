@@ -1,4 +1,4 @@
-import com.dragovorn.mccw.utils.RomanNumerals;
+import com.dragovorn.mccw.utils.Calculator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -7,12 +7,20 @@ public class TestUtils {
 
     @Test
     public void testToRoman() {
-        System.out.println(RomanNumerals.toRoman(3));
+        System.out.println(Calculator.toRoman(3));
 
-        assertEquals(RomanNumerals.toRoman(3), "III");
+        assertEquals(Calculator.toRoman(3), "III");
 
-        System.out.println(RomanNumerals.toRoman(7));
+        System.out.println(Calculator.toRoman(7));
 
-        assertEquals(RomanNumerals.toRoman(7), "VII");
+        assertEquals(Calculator.toRoman(7), "VII");
+    }
+
+    @Test
+    public void testFormToLine() {
+        System.out.println(Calculator.formToLine(9));
+
+        assertEquals(Calculator.formToLine(9), 1);
+        assertEquals(Calculator.formToLine(18), 2);
     }
 }

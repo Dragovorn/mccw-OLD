@@ -7,13 +7,17 @@ import org.bukkit.inventory.ItemStack;
 public class None extends Class {
 
     public None() {
-        super("No Class", 1000);
+        super("No Class", 0);
 
         addUpgrade(new Health());
     }
 
     @Override
     public ItemStack getShopItem() {
-        return new ItemStack(Material.BARRIER);
+        ItemStack stack = new ItemStack(Material.BARRIER);
+
+        stack.getItemMeta().setDisplayName(getName());
+
+        return stack;
     }
 }

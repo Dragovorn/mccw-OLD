@@ -2,11 +2,11 @@ package com.dragovorn.mccw.utils;
 
 import java.util.TreeMap;
 
-public class RomanNumerals {
+public class Calculator {
 
     private static final TreeMap<Integer, String> map = new TreeMap<>();
 
-    static  {
+    static {
         map.put(1000, "M");
         map.put(900, "CM");
         map.put(500, "D");
@@ -30,5 +30,30 @@ public class RomanNumerals {
         }
 
         return map.get(index) + toRoman(number - index);
+    }
+
+    public static int formToLine(int i) {
+        int lines = 1;
+
+        if (i > 9) {
+            lines++;
+        }
+        if (i > 9*2) {
+            lines++;
+        }
+        if (i > 9*3) {
+            lines++;
+        }
+        if (i > 9*4) {
+            lines++;
+        }
+        if (i > 9*5) {
+            lines++;
+        }
+        if (i > 9*6) {
+            lines++;
+        }
+
+        return lines;
     }
 }

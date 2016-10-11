@@ -12,14 +12,19 @@ public abstract class Class implements ShopItem {
 
     private String name;
 
-    private int cost;
+    private long cost;
 
     private List<Upgrade> upgrades;
 
-    public Class(String name, int cost) {
+    Class(String name, long cost) {
         this.name = name;
         this.cost = cost;
         this.upgrades = new ArrayList<>();
+    }
+
+    @Override
+    public long getCost() {
+        return this.cost;
     }
 
     public void onPurchase(MCCWPlayer player) { }
@@ -52,10 +57,6 @@ public abstract class Class implements ShopItem {
 
     public String getName() {
         return this.name;
-    }
-
-    public int getCost() {
-        return this.cost;
     }
 
     public Upgrade getUpgrade(String name) {

@@ -9,6 +9,8 @@ public class QuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        event.setQuitMessage(null);
+
         MCCW.getInstance().deregisterPlayer(event.getPlayer());
     }
 }
