@@ -2,8 +2,10 @@ package com.dragovorn.mccw;
 
 import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.SchematicManager;
+import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
+import com.dragovorn.mccw.game.shop.kit.None;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
@@ -53,7 +55,7 @@ public class MCCW extends JavaPlugin {
 
         try {
             this.sql = new SQL("dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
-        } catch (SQLException | ClassNotFoundException exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -69,7 +71,11 @@ public class MCCW extends JavaPlugin {
 
         this.schematicManager.loadSchematics(this.schematics);
 
-        this.buildings = new ImmutableList.Builder<Building>().add(new Building("Town Hall", true, 1, this.schematicManager.getSchematicByName("townhall"))).build();
+        Building townHall = new Building("Town Hall", true, 0, this.schematicManager.getSchematicByName("townhall"));
+
+        townHall.addItem(new None());
+
+        this.buildings = new ImmutableList.Builder<Building>().add(townHall).build();
     }
 
     @Override
@@ -127,6 +133,20 @@ public class MCCW extends JavaPlugin {
 
     public File getSchematicFolder() {
         return this.schematics;
+    }
+
+    public Building getBuildingByName(String name) {
+        for (Building building : this.buildings) {
+            if (building.getName().equals(name)) {
+                return building;
+            }
+        }
+
+        throw new BuildingException("could not find building " + name);
+    }
+
+    public SQL getSql() {
+        return this.sql;
     }
 
     public SchematicManager getBuildingManager() {

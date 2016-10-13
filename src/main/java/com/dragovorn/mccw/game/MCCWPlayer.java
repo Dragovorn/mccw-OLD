@@ -8,7 +8,12 @@ import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
 import org.bukkit.entity.Player;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MCCWPlayer {
@@ -46,12 +51,34 @@ public class MCCWPlayer {
         this.player = player;
         this.networth = 0;
         this.gold = 0;
-        this.level = 0;
+
+        try {
+            Statement statement = MCCW.getInstance().getSql().getConnection().createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT name FROM players WHERE uuid=\'" + player.getUniqueId() + "\'");
+
+            if (!resultSet.next()) {
+                String preStatment = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
+
+                PreparedStatement preparedStatement = MCCW.getInstance().getSql().getConnection().prepareStatement(preStatment);
+
+                preparedStatement.setString(1, player.getUniqueId().toString());
+                preparedStatement.setString(2, player.getDisplayName());
+                preparedStatement.setDate(3, new java.sql.Date(new Date().getTime()));
+                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
         this.kills = 0;
         this.deaths = 0;
+        this.kda = 0.0;
+        this.level = 0;
         this.exp = 0;
         this.expNextLevel = 1000;
-        this.kda = 0.0;
         this.clazz = new None();
         this.upgrades = new ArrayList<>();
     }
@@ -112,7 +139,7 @@ public class MCCWPlayer {
     }
 
     public void updateExpNextLevel() {
-        // use an array to figure what their next value is
+        this.expNextLevel = MCCW.getInstance().exp[this.level];
     }
 
     public Player getPlayer() {

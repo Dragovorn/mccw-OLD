@@ -24,7 +24,7 @@ public class Building {
 
     private Location location;
 
-    private Map<ShopItem, Integer> shop;
+    private Map<ShopItem, Long> shop;
 
     private Entity villager;
 
@@ -41,8 +41,8 @@ public class Building {
         this.shop = new HashMap<>();
     }
 
-    public Building addItem(ShopItem item, int cost) {
-        this.shop.put(item, cost);
+    public Building addItem(ShopItem item) {
+        this.shop.put(item, item.getCost());
 
         return this;
     }
@@ -58,7 +58,7 @@ public class Building {
 
         int x = 0;
 
-        for (Map.Entry<ShopItem, Integer> entry : this.shop.entrySet()) {
+        for (Map.Entry<ShopItem, Long> entry : this.shop.entrySet()) {
             inventory.setItem(x, entry.getKey().getShopItem());
         }
 
@@ -149,7 +149,7 @@ public class Building {
     private void buildBlock(Block block, int type, byte data) {
         Material blockType = Material.getMaterial(type);
 
-        block.getLocation().getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, blockType);
+        block.getLocation().getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, blockType, data);
 
         block.setType(blockType, false);
         block.setData(data, false);
@@ -157,7 +157,7 @@ public class Building {
     }
 
     public void levelup() {
-        level++;
+        this.level++;
         updateBuild();
     }
 
@@ -190,6 +190,6 @@ public class Building {
     }
 
     private void updateBuild() {
-        // TODO
+        // TODO deletes the old building and builds the next level one
     }
 }

@@ -2,9 +2,9 @@ import com.dragovorn.mccw.utils.Passwords;
 import com.dragovorn.mccw.utils.SQL;
 import org.junit.Test;
 
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Date;
 
 public class TestSQL {
 
@@ -12,11 +12,17 @@ public class TestSQL {
     public void testSQL() throws SQLException, ClassNotFoundException {
         SQL sql = new SQL("dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
 
-        Statement statement = sql.getConnection().createStatement();
+        String preStatment = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
 
-        ResultSet res = statement.executeQuery("SELECT games FROM player WHERE uuid='fa2daf04-02e9-4fe2-a70c-b38db29afc47';");
-        res.next();
+        PreparedStatement preparedStatement = sql.getConnection().prepareStatement(preStatment);
 
-        System.out.println(res.getInt("games"));
+        preparedStatement.setString(1, "fa2daf04-02e9-4fe2-a70c-b38db29afc47");
+        preparedStatement.setString(2, "Dragovorn");
+        preparedStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+        preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+
+        preparedStatement.executeUpdate();
+
+        System.out.println(new Date(System.currentTimeMillis()));
     }
 }

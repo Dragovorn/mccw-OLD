@@ -14,7 +14,7 @@ public class SQL {
 
     private final Connection connection;
 
-    public SQL(String hostname, int port, String database, String user, String password) throws SQLException, ClassNotFoundException {
+    public SQL(String hostname, int port, String database, String user, String password) throws SQLException {
         this.connection = DriverManager.getConnection("jdbc:mysql://" + hostname + ":"  + port + "/" + database + "?user=" + user + "&password=" + password + "&useUnicode=true&characterEncoding=UTF-8");
         this.hostname = hostname;
         this.port = port;
