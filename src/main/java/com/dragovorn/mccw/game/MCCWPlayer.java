@@ -8,12 +8,8 @@ import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
 import org.bukkit.entity.Player;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MCCWPlayer {
@@ -30,12 +26,14 @@ public class MCCWPlayer {
     private long gold;
 
     private int level;
+    private int games;
+    private int wins;
+    private int losses;
     private int kills;
     private int deaths;
 
     private double exp;
     private double expNextLevel;
-    private double kda;
 
     public MCCWPlayer(Player player, int level, int kills, int deaths, double exp) {
         this(player);
@@ -44,7 +42,6 @@ public class MCCWPlayer {
         this.kills = kills;
         this.deaths = deaths;
         this.expNextLevel = MCCW.getInstance().exp[level - 1];
-        this.kda = kills / deaths;
     }
 
     public MCCWPlayer(Player player) { // Here is where we resolve the data from the database
@@ -55,30 +52,34 @@ public class MCCWPlayer {
         try {
             Statement statement = MCCW.getInstance().getSql().getConnection().createStatement();
 
-            ResultSet resultSet = statement.executeQuery("SELECT name FROM players WHERE uuid=\'" + player.getUniqueId() + "\'");
+            ResultSet resultSet = statement.executeQuery("SELECT xp, level, games, kills, deaths, wins, losses FROM players WHERE uuid=\'" + player.getUniqueId() + "\'");
 
             if (!resultSet.next()) {
-                String preStatment = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
+                String preStatement = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
 
-                PreparedStatement preparedStatement = MCCW.getInstance().getSql().getConnection().prepareStatement(preStatment);
+                PreparedStatement preparedStatement = MCCW.getInstance().getSql().getConnection().prepareStatement(preStatement);
 
                 preparedStatement.setString(1, player.getUniqueId().toString());
                 preparedStatement.setString(2, player.getDisplayName());
-                preparedStatement.setDate(3, new java.sql.Date(new Date().getTime()));
-                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+                preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 
                 preparedStatement.executeUpdate();
+            } else {
+                this.exp = resultSet.getDouble("xp");
+                this.level = resultSet.getInt("level");
+                this.games = resultSet.getInt("games");
+                this.kills = resultSet.getInt("kills");
+                this.deaths = resultSet.getInt("deaths");
+                this.wins = resultSet.getInt("wins");
+                this.losses = resultSet.getInt("losses");
+                this.expNextLevel = MCCW.getInstance().exp[this.level];
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+            return;
         }
 
-        this.kills = 0;
-        this.deaths = 0;
-        this.kda = 0.0;
-        this.level = 0;
-        this.exp = 0;
-        this.expNextLevel = 1000;
         this.clazz = new None();
         this.upgrades = new ArrayList<>();
     }
@@ -158,6 +159,18 @@ public class MCCWPlayer {
         return this.level;
     }
 
+    public int getGames() {
+        return this.games;
+    }
+
+    public int getWins() {
+        return this.wins;
+    }
+
+    public int getLosses() {
+        return this.losses;
+    }
+
     public int getKills() {
         return this.kills;
     }
@@ -175,7 +188,7 @@ public class MCCWPlayer {
     }
 
     public double getKda() {
-        return this.kda;
+        return this.kills / this.deaths;
     }
 
     public ITeam getTeam() {

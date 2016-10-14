@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class TestSQL {
 
@@ -12,17 +12,17 @@ public class TestSQL {
     public void testSQL() throws SQLException, ClassNotFoundException {
         SQL sql = new SQL("dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
 
-        String preStatment = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
+        String preStatement = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
 
-        PreparedStatement preparedStatement = sql.getConnection().prepareStatement(preStatment);
+        PreparedStatement preparedStatement = sql.getConnection().prepareStatement(preStatement);
 
         preparedStatement.setString(1, "fa2daf04-02e9-4fe2-a70c-b38db29afc47");
         preparedStatement.setString(2, "Dragovorn");
-        preparedStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-        preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+        preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+        preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 
         preparedStatement.executeUpdate();
 
-        System.out.println(new Date(System.currentTimeMillis()));
+        System.out.println(new Timestamp(System.currentTimeMillis()));
     }
 }
