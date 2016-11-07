@@ -5,7 +5,6 @@ import com.dragovorn.mccw.building.SchematicManager;
 import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
-import com.dragovorn.mccw.game.shop.kit.None;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
@@ -22,7 +21,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,8 @@ public class MCCW extends JavaPlugin {
     private SQL sql;
 
     private static MCCW instance;
+
+    public static final String GAMEPLAY_VERSION = "0.01a";
 
     @Override
     public void onLoad() {
@@ -71,11 +74,12 @@ public class MCCW extends JavaPlugin {
 
         this.schematicManager.loadSchematics(this.schematics);
 
-        Building townHall = new Building("Town Hall", true, 0, this.schematicManager.getSchematicByName("townhall"));
+        /* Leave this commented until I've got some form of schematics */
+//        Building townHall = new Building("Town Hall", true, 0, this.schematicManager.getSchematicByName("townhall"));
 
-        townHall.addItem(new None());
+//        townHall.addItem(new None());
 
-        this.buildings = new ImmutableList.Builder<Building>().add(townHall).build();
+//        this.buildings = new ImmutableList.Builder<Building>().add(townHall).build();
     }
 
     @Override
@@ -103,14 +107,31 @@ public class MCCW extends JavaPlugin {
         return instance;
     }
 
-    public void registerPlayer(Player player) {
-        this.players.add(new MCCWPlayer(player));
+    public MCCWPlayer registerPlayer(Player player) {
+        MCCWPlayer mccwPlayer = new MCCWPlayer(player);
+
+        this.players.add(mccwPlayer);
+
+        return mccwPlayer;
     }
 
     public void deregisterPlayer(Player player) {
         for (MCCWPlayer players : this.players) {
             if (players.getPlayer().getUniqueId().equals(player.getUniqueId())) {
                 this.players.remove(players);
+
+                String statement = "UPDATE players SET disconnected=? WHERE uuid=?";
+
+                try {
+                    PreparedStatement preparedStatement = this.sql.getConnection().prepareStatement(statement);
+
+                    preparedStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                    preparedStatement.setString(2, player.getUniqueId().toString());
+
+                    preparedStatement.executeUpdate();
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
 
                 return;
             }
