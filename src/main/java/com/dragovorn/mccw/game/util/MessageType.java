@@ -17,4 +17,8 @@ public enum MessageType {
     public String getPrefix() {
         return this.prefix;
     }
+
+    public static String colourize(String str) {
+        return ChatColor.translateAlternateColorCodes('&', str);
+    }
 }

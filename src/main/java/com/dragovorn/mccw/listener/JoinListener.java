@@ -2,7 +2,6 @@ package com.dragovorn.mccw.listener;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.game.MCCWPlayer;
-import com.dragovorn.mccw.game.util.Message;
 import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +15,6 @@ public class JoinListener implements Listener {
 
         MCCWPlayer player = MCCW.getInstance().registerPlayer(event.getPlayer());
 
-        Message.send(player, MessageType.REGULAR, "Welcome to MCCW Patch: &a%s &7Engine Version: &a%s&7!", MCCW.GAMEPLAY_VERSION, MCCW.getInstance().getDescription().getVersion());
+        player.sendMessage(MessageType.REGULAR, "Welcome to MCCW Patch: &a%s &7Engine Version: &a%s&7!", MCCW.GAMEPLAY_VERSION, MCCW.getInstance().getDescription().getVersion());
     }
 }

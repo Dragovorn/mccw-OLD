@@ -4,7 +4,6 @@ import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.BuildingManager;
 import com.dragovorn.mccw.exceptions.TeamException;
 import com.dragovorn.mccw.game.MCCWPlayer;
-import com.dragovorn.mccw.game.util.Message;
 import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,7 +30,7 @@ public class Red implements ITeam {
             throw new TeamException(player.getPlayer().getName() + " is already in a team");
         }
 
-        Message.send(player, MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
+        player.sendMessage(MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
     }
 
     @Override
@@ -42,7 +41,7 @@ public class Red implements ITeam {
             throw new TeamException(player.getPlayer().getName() + " either isn't in a team or isn't in the " + getName() + " team");
         }
 
-        Message.send(player, MessageType.REGULAR, "You left the " + getColour() + getName() + "&7 team!");
+        player.sendMessage(MessageType.REGULAR, "You left the " + getColour() + getName() + "&7 team!");
     }
 
     @Override

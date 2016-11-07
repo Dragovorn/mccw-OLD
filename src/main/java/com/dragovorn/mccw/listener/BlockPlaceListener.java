@@ -2,7 +2,6 @@ package com.dragovorn.mccw.listener;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.game.MCCWPlayer;
-import com.dragovorn.mccw.game.util.Message;
 import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -25,7 +24,7 @@ public class BlockPlaceListener implements Listener {
 
             }
         } else {
-            Message.send(player, MessageType.ERROR, "You have to be on a team to build a building!");
+            player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
         }
     }
 }

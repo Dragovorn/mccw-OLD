@@ -6,6 +6,7 @@ import com.dragovorn.mccw.game.shop.kit.Class;
 import com.dragovorn.mccw.game.shop.kit.None;
 import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
+import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
@@ -133,6 +134,10 @@ public class MCCWPlayer {
         this.team = team;
 
         team.join(this);
+    }
+
+    public void sendMessage(MessageType type, String message, Object... objects) {
+        player.getPlayer().sendMessage(String.format(MessageType.colourize(type.getPrefix() + message), objects));
     }
 
     public void addExp(double exp) {
