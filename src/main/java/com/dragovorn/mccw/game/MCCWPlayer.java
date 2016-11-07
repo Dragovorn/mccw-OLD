@@ -55,6 +55,8 @@ public class MCCWPlayer {
             ResultSet resultSet = statement.executeQuery("SELECT xp, level, games, kills, deaths, wins, losses FROM players WHERE uuid=\'" + player.getUniqueId() + "\'");
 
             if (!resultSet.next()) {
+                MCCW.getInstance().getLogger().info("Registering " + player.getDisplayName() + " to database!");
+
                 String preStatement = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
 
                 PreparedStatement preparedStatement = MCCW.getInstance().getSql().getConnection().prepareStatement(preStatement);
