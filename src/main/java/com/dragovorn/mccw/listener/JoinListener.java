@@ -15,6 +15,12 @@ public class JoinListener implements Listener {
 
         MCCWPlayer player = MCCW.getInstance().registerPlayer(event.getPlayer());
 
+        if (player.getPlayer().getDisplayName().equals("Dragovorn")) {
+            player.setPrefix("&6&lDeveloper &7");
+        } else {
+            player.setPrefix("&7");
+        }
+
         player.sendMessage(MessageType.REGULAR, "Welcome to MCCW Patch: &a%s &7Engine Version: &a%s&7!", MCCW.GAMEPLAY_VERSION, MCCW.getInstance().getDescription().getVersion());
     }
 }

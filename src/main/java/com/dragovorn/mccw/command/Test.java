@@ -20,8 +20,19 @@ public class Test implements CommandExecutor {
 
         MCCWPlayer player = MCCW.getInstance().getPlayer((Player) sender);
 
-        player.sendMessage(MessageType.REGULAR, "This is a test command!");
 
-        return true;
+        if (player.getPlayer().getDisplayName().equals("Dragovorn")) {
+            player.sendMessage(MessageType.REGULAR, "Preforming test...");
+            preformTest(player);
+            player.sendMessage(MessageType.REGULAR, "Test preformed!");
+            return true;
+        } else {
+            player.sendMessage(MessageType.ERROR, "You cannot run this command!");
+            return false;
+        }
+    }
+
+    private void preformTest(MCCWPlayer player) {
+        player.sendMessage(MessageType.REGULAR, "Testing...");
     }
 }

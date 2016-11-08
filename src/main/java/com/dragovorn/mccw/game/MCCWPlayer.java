@@ -7,7 +7,9 @@ import com.dragovorn.mccw.game.shop.kit.None;
 import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.util.MessageType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class MCCWPlayer {
     private List<Upgrade> upgrades;
 
     private final Player player;
+
+    private final Team tag;
 
     private long networth;
     private long gold;
@@ -45,7 +49,7 @@ public class MCCWPlayer {
         this.expNextLevel = MCCW.getInstance().exp[level - 1];
     }
 
-    public MCCWPlayer(Player player) { // Here is where we resolve the data from the database
+    public MCCWPlayer(Player player) {
         this.player = player;
         this.networth = 0;
         this.gold = 0;
@@ -80,11 +84,12 @@ public class MCCWPlayer {
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
-            return;
         }
 
         this.clazz = new None();
         this.upgrades = new ArrayList<>();
+        this.tag = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(player.getDisplayName());
+        this.tag.addEntry(player.getName());
     }
 
     public void addGold(long gold) {
@@ -95,6 +100,14 @@ public class MCCWPlayer {
     public void subtractGold(long gold) {
         this.gold -= gold;
         this.networth -= gold;
+    }
+
+    public void setPrefix(String prefix) {
+        this.tag.setPrefix(MessageType.colourize(prefix));
+    }
+
+    public void setSuffix(String suffix) {
+        this.tag.setSuffix(MessageType.colourize(suffix));
     }
 
     public void buy(String name) {

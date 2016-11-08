@@ -9,10 +9,7 @@ import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
-import com.dragovorn.mccw.listener.BlockPlaceListener;
-import com.dragovorn.mccw.listener.JoinListener;
-import com.dragovorn.mccw.listener.PlayerInteractEntityListener;
-import com.dragovorn.mccw.listener.QuitListener;
+import com.dragovorn.mccw.listener.*;
 import com.dragovorn.mccw.utils.Passwords;
 import com.dragovorn.mccw.utils.SQL;
 import com.google.common.collect.ImmutableList;
@@ -93,6 +90,7 @@ public class MCCW extends JavaPlugin {
         manager.registerEvents(new QuitListener(), this);
         manager.registerEvents(new BlockPlaceListener(), this);
         manager.registerEvents(new PlayerInteractEntityListener(), this);
+        manager.registerEvents(new PlayerChatListener(), this);
     }
 
     @Override

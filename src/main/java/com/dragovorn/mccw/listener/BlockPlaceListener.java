@@ -16,15 +16,15 @@ public class BlockPlaceListener implements Listener {
 
         MCCWPlayer player = MCCW.getInstance().getPlayer(event.getPlayer());
 
-        if (player.isInTeam()) {
-            if (event.getItemInHand().getItemMeta().getDisplayName().contains(ChatColor.GRAY + "(Building)")) {
+        if (event.getItemInHand().getItemMeta().getDisplayName().contains(ChatColor.GRAY + "(Building)")) {
+            if (player.isInTeam()) {
                 String itemName = ChatColor.stripColor(event.getItemInHand().getItemMeta().getDisplayName());
                 itemName = itemName.replace(" (Building)", "");
 
-
+                // TODO Building Block placed, build the building
+            } else {
+                player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
             }
-        } else {
-            player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
         }
     }
 }
