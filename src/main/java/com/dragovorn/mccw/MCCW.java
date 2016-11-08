@@ -2,6 +2,7 @@ package com.dragovorn.mccw;
 
 import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.SchematicManager;
+import com.dragovorn.mccw.command.Test;
 import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
@@ -85,6 +86,8 @@ public class MCCW extends JavaPlugin {
     @Override
     public void onEnable() {
         PluginManager manager = Bukkit.getPluginManager();
+
+        getCommand("test").setExecutor(new Test());
 
         manager.registerEvents(new JoinListener(), this);
         manager.registerEvents(new QuitListener(), this);

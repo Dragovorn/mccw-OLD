@@ -2,3 +2,6 @@ name: MCCW
 version: 0.0.1
 main: com.dragovorn.mccw.MCCW
 author: Dragovorn
+commands:
+  test:
+    description: test command
