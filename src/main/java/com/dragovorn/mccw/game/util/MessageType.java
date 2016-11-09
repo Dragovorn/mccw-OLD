@@ -6,7 +6,8 @@ public enum MessageType {
     REGULAR(ChatColor.BLUE + "MCCW" + ChatColor.GRAY + "> "),
     COMBAT(ChatColor.RED + "COMBAT" + ChatColor.GRAY + "> "),
     WARN(ChatColor.YELLOW + "WARN> "),
-    ERROR(ChatColor.RED + "ERROR> ");
+    ERROR(ChatColor.RED + "ERROR> "),
+    NONE("");
 
     private final String prefix;
 
