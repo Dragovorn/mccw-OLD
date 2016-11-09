@@ -9,6 +9,8 @@ import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
+import com.dragovorn.mccw.game.timer.GameState;
+import com.dragovorn.mccw.game.util.MessageType;
 import com.dragovorn.mccw.listener.*;
 import com.dragovorn.mccw.utils.Passwords;
 import com.dragovorn.mccw.utils.SQL;
@@ -45,11 +47,16 @@ public class MCCW extends JavaPlugin {
 
     private static MCCW instance;
 
+    private GameState state;
+
     public static final String GAMEPLAY_VERSION = "0.01a";
+
+    public static final int MAX_PLAYERS = 20;
 
     @Override
     public void onLoad() {
         instance = this;
+        this.state = GameState.WAITING;
         this.schematicManager = new SchematicManager();
         this.players = new ArrayList<>();
         this.teams = new ImmutableList.Builder<ITeam>().add(new Blue()).add(new Red()).build();
@@ -119,24 +126,48 @@ public class MCCW extends JavaPlugin {
     public void deregisterPlayer(Player player) {
         for (MCCWPlayer players : this.players) {
             if (players.getPlayer().getUniqueId().equals(player.getUniqueId())) {
-                this.players.remove(players);
-
-                String statement = "UPDATE players SET disconnected=? WHERE uuid=?";
-
-                try {
-                    PreparedStatement preparedStatement = this.sql.getConnection().prepareStatement(statement);
-
-                    preparedStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-                    preparedStatement.setString(2, player.getUniqueId().toString());
-
-                    preparedStatement.executeUpdate();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
+                deregisterPlayer(players);
 
                 return;
             }
         }
+    }
+
+    public void deregisterPlayer(MCCWPlayer player) {
+        this.players.remove(player);
+
+        String statement = "UPDATE players SET name=?, xp=?, level=?, disconnected=?, games=?, kills=?, deaths=?, wins=?, losses=? WHERE uuid=?";
+
+        try {
+            PreparedStatement preparedStatement = this.sql.getConnection().prepareStatement(statement);
+
+            preparedStatement.setString(1, player.getPlayer().getName());
+            preparedStatement.setDouble(2, player.getExp());
+            preparedStatement.setInt(3, player.getLevel());
+            preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setInt(5, player.getGames());
+            preparedStatement.setInt(6, player.getKills());
+            preparedStatement.setInt(7, player.getDeaths());
+            preparedStatement.setInt(8, player.getWins());
+            preparedStatement.setInt(9, player.getLosses());
+            preparedStatement.setString(10, player.getPlayer().getUniqueId().toString());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void broadcast(MessageType type, String message, Object... objs) {
+        Bukkit.broadcastMessage(type.getPrefix() + MessageType.colourize(String.format(message, objs)));
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public List<MCCWPlayer> getPlayers() {
+        return this.players;
     }
 
     public MCCWPlayer getPlayer(Player player) {
@@ -173,5 +204,9 @@ public class MCCW extends JavaPlugin {
 
     public SchematicManager getBuildingManager() {
         return this.schematicManager;
+    }
+
+    public GameState getState() {
+        return this.state;
     }
 }

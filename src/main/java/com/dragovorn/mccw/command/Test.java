@@ -33,6 +33,6 @@ public class Test implements CommandExecutor {
     }
 
     private void preformTest(MCCWPlayer player) {
-        player.sendMessage(MessageType.REGULAR, "Testing...");
+        player.incrementKills();
     }
 }

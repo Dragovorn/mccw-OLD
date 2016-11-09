@@ -25,6 +25,8 @@ public class BlockPlaceListener implements Listener {
             } else {
                 player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
             }
+        } else {
+            player.sendMessage(MessageType.ERROR, "You are not allowed to build!");
         }
     }
 }

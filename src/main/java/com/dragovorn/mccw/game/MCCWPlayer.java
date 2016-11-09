@@ -159,6 +159,10 @@ public class MCCWPlayer {
         updateExpNextLevel();
     }
 
+    public void incrementKills() {
+        this.kills++;
+    }
+
     public void updateExpNextLevel() {
         this.expNextLevel = MCCW.getInstance().exp[this.level];
     }
