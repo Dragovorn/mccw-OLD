@@ -10,12 +10,17 @@ public class Health extends Upgrade {
         super("Health", 1, 10, UpgradeType.BUFF);
     }
 
-    public void changeScaling(int[] hpValues) {
+    public Health changeScaling(int[] hpValues) {
         this.hpValues = hpValues;
+
+        return this;
     }
 
-    public void setMaxLevel(int maxLevel) {
+    @Override
+    public Upgrade setMaxLevel(int maxLevel) {
         super.setMaxLevel(maxLevel);
+
+        return this;
     }
 
     @Override

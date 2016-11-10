@@ -2,6 +2,7 @@ package com.dragovorn.mccw.listener;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.game.MCCWPlayer;
+import com.dragovorn.mccw.game.shop.item.JoinRed;
 import com.dragovorn.mccw.game.timer.GameState;
 import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.Bukkit;
@@ -28,6 +29,8 @@ public class JoinListener implements Listener {
         if (MCCW.getInstance().getState() == GameState.WAITING) {
             MCCW.getInstance().broadcast(MessageType.REGULAR, "%s (Level: %s) has connected! [%s/%s]", player.getPlayer().getDisplayName(), player.getLevel(), Bukkit.getOnlinePlayers().size(), MCCW.MAX_PLAYERS);
         }
+
+        player.addItem(new JoinRed());
 
         if (Bukkit.getOnlinePlayers().size() == MCCW.MAX_PLAYERS) {
             MCCW.getInstance().setState(GameState.VOTING);

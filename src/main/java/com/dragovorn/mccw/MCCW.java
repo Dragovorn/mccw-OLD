@@ -98,6 +98,7 @@ public class MCCW extends JavaPlugin {
         manager.registerEvents(new BlockPlaceListener(), this);
         manager.registerEvents(new PlayerInteractEntityListener(), this);
         manager.registerEvents(new PlayerChatListener(), this);
+        manager.registerEvents(new RightClickListener(), this);
     }
 
     @Override

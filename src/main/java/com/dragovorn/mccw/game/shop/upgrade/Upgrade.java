@@ -33,7 +33,7 @@ public abstract class Upgrade implements ShopItem {
 
     @Override
     public long getCost() {
-        return getCosts()[getLevel()];
+        return getCosts()[getLevel() - 1];
     }
 
     @Override
@@ -44,6 +44,7 @@ public abstract class Upgrade implements ShopItem {
         return new ItemStack(Material.ENCHANTED_BOOK);
     }
 
+    @Override
     public void apply(MCCWPlayer player) {
         onApply(player);
 
@@ -62,8 +63,10 @@ public abstract class Upgrade implements ShopItem {
 
     public abstract long[] getCosts();
 
-    protected void setMaxLevel(int maxLevel) {
+    protected Upgrade setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
+
+        return this;
     }
 
     public void levelup(MCCWPlayer player) {

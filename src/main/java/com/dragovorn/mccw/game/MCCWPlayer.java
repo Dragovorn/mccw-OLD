@@ -2,6 +2,7 @@ package com.dragovorn.mccw.game;
 
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.exceptions.UpgradeException;
+import com.dragovorn.mccw.game.shop.item.Item;
 import com.dragovorn.mccw.game.shop.kit.Class;
 import com.dragovorn.mccw.game.shop.kit.None;
 import com.dragovorn.mccw.game.shop.upgrade.Upgrade;
@@ -9,6 +10,7 @@ import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.sql.*;
@@ -22,6 +24,7 @@ public class MCCWPlayer {
     private Class clazz;
 
     private List<Upgrade> upgrades;
+    private List<Item> inventory;
 
     private final Player player;
 
@@ -88,8 +91,19 @@ public class MCCWPlayer {
 
         this.clazz = new None();
         this.upgrades = new ArrayList<>();
+        this.inventory = new ArrayList<>();
         this.tag = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(player.getDisplayName());
         this.tag.addEntry(player.getName());
+    }
+
+    public void addItem(Item item) {
+        this.inventory.add(item);
+        item.apply(this);
+    }
+
+    public void removeItem(Item item) {
+        this.inventory.remove(item);
+        this.player.getInventory().remove(item.getItem());
     }
 
     public void addGold(long gold) {
@@ -221,6 +235,14 @@ public class MCCWPlayer {
 
     public List<Upgrade> getUpgrades() {
         return this.upgrades;
+    }
+
+    public List<Item> getInventory() {
+        return this.inventory;
+    }
+
+    public ItemStack getMainHand() {
+        return this.player.getInventory().getItemInMainHand();
     }
 
     public boolean isInTeam() {

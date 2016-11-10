@@ -27,8 +27,11 @@ public abstract class Class implements ShopItem {
         return this.cost;
     }
 
-    public void onPurchase(MCCWPlayer player) { }
+    public void onPurchase(MCCWPlayer player) {
+        apply(player);
+    }
 
+    @Override
     public void apply(MCCWPlayer player) {
         for (Upgrade upgrade : this.upgrades) {
             upgrade.apply(player);
