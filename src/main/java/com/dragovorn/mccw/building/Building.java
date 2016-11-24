@@ -116,7 +116,7 @@ public class Building {
                                 byte data = schematic.getData()[otherIndex];
 
                                 if (!block.getLocation().equals(location)) {
-                                    if (data == DyeColor.WHITE.getData()) {
+                                    if (data == DyeColor.WHITE.getData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
                                         if (manager.getTeam().getColour() == ChatColor.RED) {
                                             data = DyeColor.RED.getData();
                                         } else if (manager.getTeam().getColour() == ChatColor.BLUE) {
