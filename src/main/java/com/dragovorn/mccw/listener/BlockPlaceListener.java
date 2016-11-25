@@ -21,12 +21,14 @@ public class BlockPlaceListener implements Listener {
                 String itemName = ChatColor.stripColor(event.getItemInHand().getItemMeta().getDisplayName());
                 itemName = itemName.replace(" (Building)", "");
 
-                // TODO Building Block placed, build the building
+                player.getTeam().getBuildingManager().build(MCCW.getInstance().getBuildingByName(itemName), event.getBlockPlaced().getLocation());
             } else {
                 player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
             }
         } else {
             player.sendMessage(MessageType.ERROR, "You are not allowed to build!");
         }
+
+        event.setCancelled(true);
     }
 }

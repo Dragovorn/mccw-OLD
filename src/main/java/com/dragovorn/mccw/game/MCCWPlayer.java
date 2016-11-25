@@ -11,6 +11,7 @@ import com.dragovorn.mccw.game.util.MessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
 
 import java.sql.*;
@@ -94,6 +95,7 @@ public class MCCWPlayer {
         this.inventory = new ArrayList<>();
         this.tag = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(player.getDisplayName());
         this.tag.addEntry(player.getName());
+        this.team = null;
     }
 
     public void addItem(Item item) {
@@ -173,6 +175,19 @@ public class MCCWPlayer {
         updateExpNextLevel();
     }
 
+    public void reset() {
+        this.player.getInventory().clear();
+        this.player.getInventory().setHelmet(null);
+        this.player.getInventory().setChestplate(null);
+        this.player.getInventory().setLeggings(null);
+        this.player.getInventory().setBoots(null);
+        this.player.getInventory().setItemInOffHand(null);
+
+        for (PotionEffect effect : this.player.getActivePotionEffects()) {
+            this.player.removePotionEffect(effect.getType());
+        }
+    }
+
     public void incrementKills() {
         this.kills++;
     }
@@ -246,7 +261,9 @@ public class MCCWPlayer {
     }
 
     public boolean isInTeam() {
-        return team != null;
+        MCCW.getInstance().getLogger().info(this.team.toString());
+
+        return this.team != null;
     }
 
     private void update() {

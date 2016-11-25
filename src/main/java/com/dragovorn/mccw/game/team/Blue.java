@@ -46,7 +46,7 @@ public class Blue implements ITeam {
 
     @Override
     public String getName() {
-        return "Red";
+        return "Blue";
     }
 
     @Override
@@ -57,6 +57,11 @@ public class Blue implements ITeam {
     @Override
     public BuildingManager getBuildingManager() {
         return buildingManager;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     private Blue outer() {

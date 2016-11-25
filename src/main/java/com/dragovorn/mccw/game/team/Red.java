@@ -64,6 +64,11 @@ public class Red implements ITeam {
         return this.players;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     private Red outer() {
         return this;
     }

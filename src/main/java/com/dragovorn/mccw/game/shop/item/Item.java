@@ -28,7 +28,7 @@ public abstract class Item implements ShopItem {
     public void onHit(MCCWPlayer hit) { }
     public void onRightClick(MCCWPlayer player) { }
     public void onLeftClick(MCCWPlayer player) { }
-    public void onDrop(MCCWPlayer player) { }
+    public boolean onDrop(MCCWPlayer player) { return true; }
 
     public abstract ItemStack getItem();
 

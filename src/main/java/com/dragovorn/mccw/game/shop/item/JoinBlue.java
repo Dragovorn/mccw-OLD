@@ -7,15 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class JoinRed extends Item {
+public class JoinBlue extends Item {
 
-    public JoinRed() {
+    public JoinBlue() {
         super("Join Red Team", 1, 1);
     }
 
     @Override
     public void onRightClick(MCCWPlayer player) {
-        player.joinTeam(MCCW.getInstance().getTeams().get(1));
+        player.joinTeam(MCCW.getInstance().getTeams().get(0));
     }
 
     @Override
@@ -25,11 +25,11 @@ public class JoinRed extends Item {
 
     @Override
     public ItemStack getItem() {
-        ItemStack stack = new ItemStack(Material.WOOL, 1, (byte) 14);
+        ItemStack stack = new ItemStack(Material.WOOL, 1, (byte) 11);
 
         ItemMeta meta = stack.getItemMeta();
 
-        meta.setDisplayName(MessageType.colourize("&cJoin Red Team &7- (Right-Click)"));
+        meta.setDisplayName(MessageType.colourize("&9Join Blue Team &7- (Right-Click)"));
 
         stack.setItemMeta(meta);
 

@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -62,7 +63,7 @@ public class MCCW extends JavaPlugin {
         this.teams = new ImmutableList.Builder<ITeam>().add(new Blue()).add(new Red()).build();
 
         try {
-            this.sql = new SQL("dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
+            this.sql = new SQL("server.dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -79,7 +80,7 @@ public class MCCW extends JavaPlugin {
 
         this.schematicManager.loadSchematics(this.schematics);
 
-        /* Leave this commented until I've got some form of schematics */
+        /* Now I need to make the schematic */
 //        Building townHall = new Building("Town Hall", true, 0, this.schematicManager.getSchematicByName("townhall"));
 
 //        townHall.addItem(new None());
@@ -110,6 +111,8 @@ public class MCCW extends JavaPlugin {
         this.players = null;
         this.sql = null;
         this.exp = null;
+
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
     }
 
     public static MCCW getInstance() {
