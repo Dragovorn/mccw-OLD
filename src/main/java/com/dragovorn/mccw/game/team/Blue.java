@@ -24,13 +24,9 @@ public class Blue implements ITeam {
 
     @Override
     public void join(MCCWPlayer player) {
-        if (!player.isInTeam()) {
-            players.add(player);
-        } else {
-            throw new TeamException(player.getPlayer().getName() + " is already in a team");
-        }
-
         player.sendMessage(MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
+        
+        // other voodoo
     }
 
     @Override
