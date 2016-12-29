@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,37 +57,7 @@ public class MCCWPlayer {
         this.networth = 0;
         this.gold = 0;
 
-        try {
-            Statement statement = MCCW.getInstance().getSql().getConnection().createStatement();
-
-            ResultSet resultSet = statement.executeQuery("SELECT xp, level, games, kills, deaths, wins, losses FROM players WHERE uuid=\'" + player.getUniqueId() + "\'");
-
-            if (!resultSet.next()) {
-                MCCW.getInstance().getLogger().info("Registering " + player.getDisplayName() + " to database!");
-
-                String preStatement = "INSERT INTO players VALUES (?, ?, 0.0, 0, ?, ?, 0, 0, 0, 0, 0)";
-
-                PreparedStatement preparedStatement = MCCW.getInstance().getSql().getConnection().prepareStatement(preStatement);
-
-                preparedStatement.setString(1, player.getUniqueId().toString());
-                preparedStatement.setString(2, player.getDisplayName());
-                preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-
-                preparedStatement.executeUpdate();
-            } else {
-                this.exp = resultSet.getDouble("xp");
-                this.level = resultSet.getInt("level");
-                this.games = resultSet.getInt("games");
-                this.kills = resultSet.getInt("kills");
-                this.deaths = resultSet.getInt("deaths");
-                this.wins = resultSet.getInt("wins");
-                this.losses = resultSet.getInt("losses");
-                this.expNextLevel = MCCW.getInstance().exp[this.level];
-            }
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
+        // TODO register player/get info
 
         this.clazz = new None();
         this.upgrades = new ArrayList<>();

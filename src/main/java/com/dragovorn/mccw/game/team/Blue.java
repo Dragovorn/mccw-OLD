@@ -25,7 +25,7 @@ public class Blue implements ITeam {
     @Override
     public void join(MCCWPlayer player) {
         player.sendMessage(MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
-        
+
         // other voodoo
     }
 

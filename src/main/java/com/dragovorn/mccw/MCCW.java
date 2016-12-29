@@ -12,8 +12,6 @@ import com.dragovorn.mccw.game.team.Red;
 import com.dragovorn.mccw.game.timer.GameState;
 import com.dragovorn.mccw.game.util.MessageType;
 import com.dragovorn.mccw.listener.*;
-import com.dragovorn.mccw.utils.Passwords;
-import com.dragovorn.mccw.utils.SQL;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,9 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +39,6 @@ public class MCCW extends JavaPlugin {
 
     private ImmutableList<Building> buildings;
 
-    private SQL sql;
-
     private static MCCW instance;
 
     private GameState state;
@@ -61,12 +54,6 @@ public class MCCW extends JavaPlugin {
         this.schematicManager = new SchematicManager();
         this.players = new ArrayList<>();
         this.teams = new ImmutableList.Builder<ITeam>().add(new Blue()).add(new Red()).build();
-
-        try {
-            this.sql = new SQL("server.dragovorn.com", 8080, "mccw", "mccw", Passwords.sql);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
 
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
@@ -109,7 +96,6 @@ public class MCCW extends JavaPlugin {
         this.schematics = null;
         this.teams = null;
         this.players = null;
-        this.sql = null;
         this.exp = null;
 
         Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
@@ -140,26 +126,7 @@ public class MCCW extends JavaPlugin {
     public void deregisterPlayer(MCCWPlayer player) {
         this.players.remove(player);
 
-        String statement = "UPDATE players SET name=?, xp=?, level=?, disconnected=?, games=?, kills=?, deaths=?, wins=?, losses=? WHERE uuid=?";
-
-        try {
-            PreparedStatement preparedStatement = this.sql.getConnection().prepareStatement(statement);
-
-            preparedStatement.setString(1, player.getPlayer().getName());
-            preparedStatement.setDouble(2, player.getExp());
-            preparedStatement.setInt(3, player.getLevel());
-            preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-            preparedStatement.setInt(5, player.getGames());
-            preparedStatement.setInt(6, player.getKills());
-            preparedStatement.setInt(7, player.getDeaths());
-            preparedStatement.setInt(8, player.getWins());
-            preparedStatement.setInt(9, player.getLosses());
-            preparedStatement.setString(10, player.getPlayer().getUniqueId().toString());
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
+        // TODO update all player info.
     }
 
     public void broadcast(MessageType type, String message, Object... objs) {
@@ -200,10 +167,6 @@ public class MCCW extends JavaPlugin {
         }
 
         throw new BuildingException("could not find building " + name);
-    }
-
-    public SQL getSql() {
-        return this.sql;
     }
 
     public SchematicManager getBuildingManager() {
