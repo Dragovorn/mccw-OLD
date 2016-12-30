@@ -65,16 +65,10 @@ public class MCCW extends JavaPlugin {
             this.schematics.mkdirs();
         }
 
+        // TODO have it figure out map rotation based off of zip files stored on Amazon S3
         // TODO load the schematics based on what map was selected (leave this as is for testing purposes)
 
         this.schematicManager.loadSchematics(this.schematics);
-
-        /* Now I need to make the schematic */
-//        Building townHall = new Building("Town Hall", true, 0, this.schematicManager.getSchematicByName("townhall"));
-
-//        townHall.addItem(new None());
-
-//        this.buildings = new ImmutableList.Builder<Building>().add(townHall).build();
     }
 
     @Override
