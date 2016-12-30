@@ -60,6 +60,7 @@ public class BuildingReference {
         player.getPlayer().openInventory(inventory);
     }
 
+    // TODO make this return the a Building object with all of the big boy stuff
     public BuildingReference build(BuildingManager manager, Location build) {
         Schematic schematic = this.schematics[this.level];
 
