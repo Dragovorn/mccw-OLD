@@ -65,6 +65,8 @@ public class MCCW extends JavaPlugin {
             this.schematics.mkdirs();
         }
 
+        // TODO load the schematics based on what map was selected (leave this as is for testing purposes)
+
         this.schematicManager.loadSchematics(this.schematics);
 
         /* Now I need to make the schematic */

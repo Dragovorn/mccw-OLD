@@ -39,23 +39,23 @@ public class Calculator {
             lines++;
         }
 
-        if (i > 9*2) {
+        if (i > 9 * 2) {
             lines++;
         }
 
-        if (i > 9*3) {
+        if (i > 9 * 3) {
             lines++;
         }
 
-        if (i > 9*4) {
+        if (i > 9 * 4) {
             lines++;
         }
 
-        if (i > 9*5) {
+        if (i > 9 * 5) {
             lines++;
         }
 
-        if (i > 9*6) {
+        if (i > 9 * 6) {
             lines++;
         }
 
