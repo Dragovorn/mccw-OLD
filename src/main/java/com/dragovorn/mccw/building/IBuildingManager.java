@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface IBuildingManager {
 
-    void build(Building building, final Location location);
+    void build(BuildingReference buildingReference, final Location location);
 
-    List<Building> getBuildings();
+    List<BuildingReference> getBuildingReferences();
 
     ITeam getTeam();
 }

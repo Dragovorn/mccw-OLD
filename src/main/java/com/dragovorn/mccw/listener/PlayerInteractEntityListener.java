@@ -1,7 +1,7 @@
 package com.dragovorn.mccw.listener;
 
 import com.dragovorn.mccw.MCCW;
-import com.dragovorn.mccw.building.Building;
+import com.dragovorn.mccw.building.BuildingReference;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -18,13 +18,13 @@ public class PlayerInteractEntityListener implements Listener {
         MCCWPlayer player = MCCW.getInstance().getPlayer(event.getPlayer());
 
         if (player.isInTeam()) {
-            for (Building building : player.getTeam().getBuildingManager().getBuildings()) {
-                if (!building.isShop()) {
+            for (BuildingReference buildingReference : player.getTeam().getBuildingManager().getBuildingReferences()) {
+                if (!buildingReference.isShop()) {
                     continue;
                 }
 
-                if (building.getShopKeeper().getUniqueId().equals(entity.getUniqueId())) {
-                    building.openShop(player);
+                if (buildingReference.getShopKeeper().getUniqueId().equals(entity.getUniqueId())) {
+                    buildingReference.openShop(player);
                     break;
                 }
             }

@@ -14,15 +14,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class Building {
+public class BuildingReference {
 
     private String name;
 
     private Schematic[] schematics;
-
-    private List<Block> blocks;
-
-    private Location location;
 
     private Map<ShopItem, Long> shop;
 
@@ -32,16 +28,15 @@ public class Building {
 
     private int level;
 
-    public Building(String name, boolean shop, int level, Schematic... schematics) {
+    public BuildingReference(String name, boolean shop, int level, Schematic... schematics) {
         this.name = name;
         this.isShop = shop;
         this.level = level;
         this.schematics = schematics;
-        this.blocks = new ArrayList<>();
         this.shop = new HashMap<>();
     }
 
-    public Building addItem(ShopItem item) {
+    public BuildingReference addItem(ShopItem item) {
         this.shop.put(item, item.getCost());
 
         return this;
@@ -65,9 +60,7 @@ public class Building {
         player.getPlayer().openInventory(inventory);
     }
 
-    public Building build(BuildingManager manager, Location location) {
-        this.location = location;
-
+    public BuildingReference build(BuildingManager manager, Location build) {
         Schematic schematic = this.schematics[this.level];
 
         final HashMap<Block, Integer> blocks = new HashMap<>();
@@ -76,7 +69,7 @@ public class Building {
         for (int x = 0; x < schematic.getWidth(); x++) {
             for (int y = 0; y < schematic.getHeight(); y++) {
                 for (int z = 0; z < schematic.getLength(); z++) {
-                    Location temp = location.clone().add(x, y, z);
+                    Location temp = build.clone().add(x, y, z);
                     Block block = temp.getBlock();
 
                     int index = y * schematic.getWidth() * schematic.getLength() + z * schematic.getWidth() + x;
@@ -93,7 +86,7 @@ public class Building {
 
         orderedBlocks.addAll(allBlocks);
 
-        Collections.sort(orderedBlocks, (Block block1, Block block2) -> Double.compare(block1.getY(), block2.getY()));
+        orderedBlocks.sort(Comparator.comparingDouble(Block::getY));
 
         final int size = orderedBlocks.size();
 
@@ -115,17 +108,17 @@ public class Building {
                                 int type = schematic.getBlocks()[otherIndex];
                                 byte data = schematic.getData()[otherIndex];
 
-                                if (!block.getLocation().equals(location)) {
-                                    if (data == DyeColor.WHITE.getData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
+                                if (!block.getLocation().equals(build)) {
+                                    if (data == DyeColor.WHITE.getDyeData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
                                         if (manager.getTeam().getColour() == ChatColor.RED) {
-                                            data = DyeColor.RED.getData();
+                                            data = DyeColor.RED.getDyeData();
                                         } else if (manager.getTeam().getColour() == ChatColor.BLUE) {
-                                            data = DyeColor.BLUE.getData();
+                                            data = DyeColor.BLUE.getDyeData();
                                         }
                                     }
 
                                     if (Material.getMaterial(type) == Material.BEDROCK) {
-                                        villager = location.getWorld().spawnEntity(block.getLocation(), EntityType.VILLAGER);
+                                        villager = build.getWorld().spawnEntity(block.getLocation(), EntityType.VILLAGER);
                                     } else {
                                         buildBlock(block, type, data);
                                     }
@@ -153,7 +146,6 @@ public class Building {
 
         block.setType(blockType, false);
         block.setData(data, false);
-        this.blocks.add(block);
     }
 
     public void levelup() {
@@ -167,14 +159,6 @@ public class Building {
 
     public Schematic[] getSchematics() {
         return this.schematics;
-    }
-
-    public List<Block> getBlocks() {
-        return this.blocks;
-    }
-
-    public Location getLocation() {
-        return this.location;
     }
 
     public Entity getShopKeeper() {
