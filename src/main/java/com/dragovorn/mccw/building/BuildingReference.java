@@ -1,18 +1,17 @@
 package com.dragovorn.mccw.building;
 
-import com.dragovorn.mccw.MCCW;
-import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.shop.ShopItem;
 import com.dragovorn.mccw.utils.Calculator;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BuildingReference {
 
@@ -21,8 +20,6 @@ public class BuildingReference {
     private Schematic[] schematics;
 
     private Map<ShopItem, Long> shop;
-
-    private Entity villager;
 
     private boolean isShop;
 
@@ -61,83 +58,10 @@ public class BuildingReference {
     }
 
     // TODO make this return the a Building object with all of the big boy stuff
-    public BuildingReference build(BuildingManager manager, Location build) {
-        Schematic schematic = this.schematics[this.level];
+    public Building build(BuildingManager manager, Location build) {
+        Building building = new Building(this, build);
 
-        final HashMap<Block, Integer> blocks = new HashMap<>();
-        List<Block> allBlocks = new ArrayList<>();
-
-        for (int x = 0; x < schematic.getWidth(); x++) {
-            for (int y = 0; y < schematic.getHeight(); y++) {
-                for (int z = 0; z < schematic.getLength(); z++) {
-                    Location temp = build.clone().add(x, y, z);
-                    Block block = temp.getBlock();
-
-                    int index = y * schematic.getWidth() * schematic.getLength() + z * schematic.getWidth() + x;
-
-                    if (block.getType() != Material.getMaterial(schematic.getBlocks()[index])) {
-                        blocks.put(block, index);
-                        allBlocks.add(block);
-                    }
-                }
-            }
-        }
-
-        final List<Block> orderedBlocks = new ArrayList<>();
-
-        orderedBlocks.addAll(allBlocks);
-
-        orderedBlocks.sort(Comparator.comparingDouble(Block::getY));
-
-        final int size = orderedBlocks.size();
-
-        if (size > 0) {
-            try {
-                new BukkitRunnable() {
-                    int index = 0;
-
-                    double blocksBuilt = 0;
-
-                    @Override
-                    public void run() {
-                        for (int x = 0; x < manager.getBlocksPerTime(); x++) {
-                            this.blocksBuilt += manager.getBlocksPerTime();
-
-                            if (this.index < size) {
-                                Block block = orderedBlocks.get(this.index);
-                                int otherIndex = blocks.get(block);
-                                int type = schematic.getBlocks()[otherIndex];
-                                byte data = schematic.getData()[otherIndex];
-
-                                if (!block.getLocation().equals(build)) {
-                                    if (data == DyeColor.WHITE.getDyeData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
-                                        if (manager.getTeam().getColour() == ChatColor.RED) {
-                                            data = DyeColor.RED.getDyeData();
-                                        } else if (manager.getTeam().getColour() == ChatColor.BLUE) {
-                                            data = DyeColor.BLUE.getDyeData();
-                                        }
-                                    }
-
-                                    if (Material.getMaterial(type) == Material.BEDROCK) {
-                                        villager = build.getWorld().spawnEntity(block.getLocation(), EntityType.VILLAGER);
-                                    } else {
-                                        buildBlock(block, type, data);
-                                    }
-                                }
-
-                                this.index++;
-                            } else {
-                                this.cancel();
-                            }
-                        }
-                    }
-                }.runTaskTimer(MCCW.getInstance(), 1L, manager.getDelay()).wait();
-            } catch (InterruptedException exception) {
-                throw new BuildingException(exception);
-            }
-        }
-
-        return this;
+        return building;
     }
 
     private void buildBlock(Block block, int type, byte data) {
@@ -160,10 +84,6 @@ public class BuildingReference {
 
     public Schematic[] getSchematics() {
         return this.schematics;
-    }
-
-    public Entity getShopKeeper() {
-        return this.villager;
     }
 
     public boolean isShop() {
