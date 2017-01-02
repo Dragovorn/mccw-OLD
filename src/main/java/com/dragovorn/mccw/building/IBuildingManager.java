@@ -2,16 +2,18 @@ package com.dragovorn.mccw.building;
 
 import com.dragovorn.mccw.game.team.ITeam;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import java.util.List;
 
 public interface IBuildingManager {
 
-    void build(Schematic schematic, final Location location);
+    List<Block> build(Schematic schematic, final Location location);
 
-    void build(BuildingReference buildingReference, final Location location);
+    void build(BuildingReference buildingReference, Location location, int level);
+    void levelBuilding(Building building);
 
-    List<BuildingReference> getBuildingReferences();
+    List<Building> getBuildings();
 
     ITeam getTeam();
 }

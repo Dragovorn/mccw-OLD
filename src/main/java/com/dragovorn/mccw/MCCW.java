@@ -1,6 +1,7 @@
 package com.dragovorn.mccw;
 
 import com.dragovorn.mccw.building.BuildingReference;
+import com.dragovorn.mccw.building.Schematic;
 import com.dragovorn.mccw.building.SchematicManager;
 import com.dragovorn.mccw.command.Test;
 import com.dragovorn.mccw.exceptions.BuildingException;
@@ -67,8 +68,15 @@ public class MCCW extends JavaPlugin {
 
         // TODO have it figure out map rotation based off of zip files stored on Amazon S3
         // TODO load the schematics based on what map was selected (leave this as is for testing purposes)
+        // TODO that is just stuff that has been planned, not going to be implemented for a little while
 
-//        this.schematicManager.loadSchematics(this.schematics);
+        this.schematicManager.loadSchematics(this.schematics);
+
+        ImmutableList.Builder<BuildingReference> builder = new ImmutableList.Builder<>();
+
+        builder.add(new BuildingReference("Town Hall", 1, true, new Schematic[] {this.schematicManager.getSchematicByName("Town Hall Level 1")}, new double[] {100}));
+
+        this.buildingReferences = builder.build();
     }
 
     @Override

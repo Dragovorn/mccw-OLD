@@ -1,5 +1,6 @@
 package com.dragovorn.mccw.game.team;
 
+import com.dragovorn.mccw.building.Building;
 import com.dragovorn.mccw.building.BuildingReference;
 import com.dragovorn.mccw.building.BuildingManager;
 import com.dragovorn.mccw.exceptions.TeamException;
@@ -71,21 +72,22 @@ public class Red implements ITeam {
 
     private class RedBuildingManager extends BuildingManager {
 
-        private List<BuildingReference> buildingReferences;
+        private List<Building> buildings;
 
         private RedBuildingManager() {
-            this.buildingReferences = new ArrayList<>();
+            this.buildings = new ArrayList<>();
         }
 
         @Override
-        public void build(BuildingReference buildingReference, Location location) {
-            buildingReference.build(this, location);
+        public void build(BuildingReference buildingReference, Location location, int level) {
+            Building building = buildingReference.build(this, location, level);
 
-            this.buildingReferences.add(buildingReference);
+            this.buildings.add(building);
         }
 
-        public List<BuildingReference> getBuildingReferences() {
-            return this.buildingReferences;
+        @Override
+        public List<Building> getBuildings() {
+            return this.buildings;
         }
 
         @Override

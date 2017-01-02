@@ -19,6 +19,7 @@ public class JoinListener implements Listener {
 
         MCCWPlayer player = MCCW.getInstance().registerPlayer(event.getPlayer());
 
+        // TODO make this based off of some permissions stuff
         if (player.getPlayer().getDisplayName().equals("Dragovorn")) {
             player.setPrefix("&6&lDeveloper &7");
         } else {

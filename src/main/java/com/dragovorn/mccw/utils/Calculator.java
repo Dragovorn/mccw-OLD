@@ -32,6 +32,7 @@ public class Calculator {
         return map.get(index) + toRoman(number - index);
     }
 
+    // TODO optimize this
     public static int formToLine(int i) {
         int lines = 1;
 

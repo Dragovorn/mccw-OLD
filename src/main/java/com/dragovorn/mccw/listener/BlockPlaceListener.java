@@ -19,9 +19,9 @@ public class BlockPlaceListener implements Listener {
         if (event.getItemInHand().getItemMeta().getDisplayName().contains(ChatColor.GRAY + "(Building)")) {
             if (player.isInTeam()) {
                 String itemName = ChatColor.stripColor(event.getItemInHand().getItemMeta().getDisplayName());
-                itemName = itemName.replace(" (Building)", "");
+                itemName = itemName.replaceAll(" \\(Place to Build\\)", "");
 
-                player.getTeam().getBuildingManager().build(MCCW.getInstance().getBuildingByName(itemName), event.getBlockPlaced().getLocation());
+//                player.getTeam().getBuildingManager().build(MCCW.getInstance().getBuildingByName(itemName), event.getBlockPlaced().getLocation());
             } else {
                 player.sendMessage(MessageType.ERROR, "You have to be on a team to build a building!");
             }
