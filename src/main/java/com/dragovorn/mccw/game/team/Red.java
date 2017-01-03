@@ -20,7 +20,26 @@ public class Red implements ITeam {
 
     public Red() {
         this.players = new ArrayList<>();
-        this.buildingManager = new RedBuildingManager();
+        this.buildingManager = new BuildingManager() {
+            private List<Building> buildings = new ArrayList<>();
+
+            @Override
+            public void build(BuildingReference buildingReference, Location location, int level) {
+                Building building = buildingReference.build(this, location, level);
+
+                this.buildings.add(building);
+            }
+
+            @Override
+            public List<Building> getBuildings() {
+                return this.buildings;
+            }
+
+            @Override
+            public ITeam getTeam() {
+                return Red.this.outer();
+            }
+        };
     }
 
     @Override
@@ -53,7 +72,7 @@ public class Red implements ITeam {
 
     @Override
     public BuildingManager getBuildingManager() {
-        return buildingManager;
+        return this.buildingManager;
     }
 
     @Override
@@ -68,31 +87,5 @@ public class Red implements ITeam {
 
     private Red outer() {
         return this;
-    }
-
-    private class RedBuildingManager extends BuildingManager {
-
-        private List<Building> buildings;
-
-        private RedBuildingManager() {
-            this.buildings = new ArrayList<>();
-        }
-
-        @Override
-        public void build(BuildingReference buildingReference, Location location, int level) {
-            Building building = buildingReference.build(this, location, level);
-
-            this.buildings.add(building);
-        }
-
-        @Override
-        public List<Building> getBuildings() {
-            return this.buildings;
-        }
-
-        @Override
-        public ITeam getTeam() {
-            return Red.this.outer();
-        }
     }
 }

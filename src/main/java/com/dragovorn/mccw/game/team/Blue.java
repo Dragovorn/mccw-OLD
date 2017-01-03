@@ -20,7 +20,26 @@ public class Blue implements ITeam {
 
     public Blue() {
         this.players = new ArrayList<>();
-        this.buildingManager = new BlueBuildingManager();
+        this.buildingManager = new BuildingManager() {
+            private List<Building> buildings = new ArrayList<>();
+
+            @Override
+            public void build(BuildingReference buildingReference, Location location, int level) {
+                Building building = buildingReference.build(this, location, level);
+
+                this.buildings.add(building);
+            }
+
+            @Override
+            public List<Building> getBuildings() {
+                return this.buildings;
+            }
+
+            @Override
+            public ITeam getTeam() {
+                return Blue.this.outer();
+            }
+        };
     }
 
     @Override
@@ -53,7 +72,7 @@ public class Blue implements ITeam {
 
     @Override
     public BuildingManager getBuildingManager() {
-        return buildingManager;
+        return this.buildingManager;
     }
 
     @Override
@@ -68,31 +87,5 @@ public class Blue implements ITeam {
     @Override
     public List<MCCWPlayer> getPlayers() {
         return this.players;
-    }
-
-    private class BlueBuildingManager extends BuildingManager {
-
-        private List<Building> buildings;
-
-        private BlueBuildingManager() {
-            this.buildings = new ArrayList<>();
-        }
-
-        @Override
-        public void build(BuildingReference buildingReference, Location location, int level) {
-            Building building = buildingReference.build(this, location, level);
-
-            this.buildings.add(building);
-        }
-
-        @Override
-        public List<Building> getBuildings() {
-            return this.buildings;
-        }
-
-        @Override
-        public ITeam getTeam() {
-            return Blue.this.outer();
-        }
     }
 }
