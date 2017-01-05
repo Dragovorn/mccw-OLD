@@ -56,7 +56,7 @@ public abstract class Item implements ShopItem {
     }
 
     @Override
-    public long getCost() {
+    public final long getCost() {
         return getCosts()[this.level];
     }
 }

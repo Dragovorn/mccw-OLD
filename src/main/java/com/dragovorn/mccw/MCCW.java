@@ -74,7 +74,7 @@ public class MCCW extends JavaPlugin {
 
         ImmutableList.Builder<BuildingReference> builder = new ImmutableList.Builder<>();
 
-        builder.add(new BuildingReference("Town Hall", 1, true, new Schematic[] {this.schematicManager.getSchematicByName("Town Hall Level 1")}, new double[] {100}));
+        builder.add(new BuildingReference("Town Hall", 1, true, new Schematic[] {this.schematicManager.getSchematicByName("Town Hall Level 1")}, new double[] {1000}));
 
         this.buildingReferences = builder.build();
     }

@@ -57,7 +57,7 @@ public class BuildingReference {
     }
 
     public Inventory getShop(int level) {
-        // TODO convert map to a shop
+        // TODO convert map to an inventory
 
         return null;
     }
