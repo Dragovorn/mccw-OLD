@@ -3,10 +3,13 @@ package com.dragovorn.mccw.command;
 import com.dragovorn.mccw.MCCW;
 import com.dragovorn.mccw.game.MCCWPlayer;
 import com.dragovorn.mccw.game.util.MessageType;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Test implements CommandExecutor {
 
@@ -33,6 +36,14 @@ public class Test implements CommandExecutor {
     }
 
     private void preformTest(MCCWPlayer player) {
-        player.incrementKills();
+        ItemStack stack = new ItemStack(Material.LAPIS_ORE);
+
+        ItemMeta meta = stack.getItemMeta();
+
+        meta.setDisplayName(MessageType.colourize("&aTown Hall &7(Place to Build)"));
+
+        stack.setItemMeta(meta);
+
+        player.getPlayer().getInventory().addItem();
     }
 }

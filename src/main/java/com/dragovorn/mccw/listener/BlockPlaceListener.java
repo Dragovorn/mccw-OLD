@@ -20,7 +20,7 @@ public class BlockPlaceListener implements Listener {
         if (event.getItemInHand().getItemMeta().getDisplayName().contains(" §7(Place to Build)")) {
             if (player.isInTeam()) {
                 String itemName = ChatColor.stripColor(event.getItemInHand().getItemMeta().getDisplayName());
-                itemName = itemName.replaceAll(" §7\\(Place to Build\\)", "");
+                itemName = itemName.replaceAll(" \\(Place to Build\\)", "");
 
                 event.getBlockPlaced().setType(Material.AIR);
                 player.getTeam().getBuildingManager().build(MCCW.getInstance().getBuildingByName(itemName), event.getBlockPlaced().getLocation(), 1);
