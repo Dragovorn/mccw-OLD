@@ -4,6 +4,7 @@ import com.dragovorn.mccw.building.BuildingReference;
 import com.dragovorn.mccw.building.Schematic;
 import com.dragovorn.mccw.building.SchematicManager;
 import com.dragovorn.mccw.command.Test;
+import com.dragovorn.mccw.database.Database;
 import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
@@ -26,10 +27,6 @@ import java.util.List;
 
 public class MCCW extends JavaPlugin {
 
-    public int[] exp = new int[] {
-            1000, 2000, 3000, 4000
-    };
-
     private File schematics;
 
     private SchematicManager schematicManager;
@@ -44,13 +41,19 @@ public class MCCW extends JavaPlugin {
 
     private GameState state;
 
+    private Database database;
+
     public static final String GAMEPLAY_VERSION = "0.01a";
 
     public static final int MAX_PLAYERS = 20;
+    public int[] exp = new int[] {
+            1000, 2000, 3000, 4000
+    };
 
     @Override
     public void onLoad() {
         instance = this;
+        this.database = new Database(Private.dbIP, Private.dbPort, Private.dbUser, Private.db, Private.dbPassword);
         this.state = GameState.WAITING;
         this.schematicManager = new SchematicManager();
         this.players = new ArrayList<>();
@@ -101,6 +104,8 @@ public class MCCW extends JavaPlugin {
         this.teams = null;
         this.players = null;
         this.exp = null;
+        this.database.close();
+        this.database = null;
 
         Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
     }
@@ -171,6 +176,10 @@ public class MCCW extends JavaPlugin {
         }
 
         throw new BuildingException("could not find building " + name);
+    }
+
+    public Database getDB() {
+        return this.database;
     }
 
     public SchematicManager getBuildingManager() {
