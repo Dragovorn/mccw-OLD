@@ -1,7 +1,6 @@
 package com.dragovorn.mccw.building;
 
 import com.dragovorn.mccw.MCCW;
-import com.dragovorn.mccw.exceptions.BuildingException;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -61,45 +60,41 @@ public abstract class BuildingManager implements IBuildingManager {
         final int size = orderedBlocks.size();
 
         if (size > 0) {
-            try {
-                new BukkitRunnable() {
-                    int index = 0;
+            new BukkitRunnable() {
+                int index = 0;
 
-                    double blocksBuilt = 0;
+                double blocksBuilt = 0;
 
-                    @Override
-                    public void run() {
-                        for (int x = 0; x < getBlocksPerTime(); x++) {
-                            this.blocksBuilt += getBlocksPerTime();
+                @Override
+                public void run() {
+                    for (int x = 0; x < getBlocksPerTime(); x++) {
+                        this.blocksBuilt += getBlocksPerTime();
 
-                            if (this.index < size) {
-                                Block block = orderedBlocks.get(this.index);
-                                int otherIndex = blocks.get(block);
-                                int type = schematic.getBlocks()[otherIndex];
-                                byte data = schematic.getData()[otherIndex];
+                        if (this.index < size) {
+                            Block block = orderedBlocks.get(this.index);
+                            int otherIndex = blocks.get(block);
+                            int type = schematic.getBlocks()[otherIndex];
+                            byte data = schematic.getData()[otherIndex];
 
-                                if (!block.getLocation().equals(location)) {
-                                    if (data == DyeColor.WHITE.getDyeData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
-                                        if (getTeam().getColour() == ChatColor.RED) {
-                                            data = DyeColor.RED.getDyeData();
-                                        } else if (getTeam().getColour() == ChatColor.BLUE) {
-                                            data = DyeColor.BLUE.getDyeData();
-                                        }
+                            if (!block.getLocation().equals(location)) {
+                                if (data == DyeColor.WHITE.getDyeData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
+                                    if (getTeam().getColour() == ChatColor.RED) {
+                                        data = DyeColor.RED.getDyeData();
+                                    } else if (getTeam().getColour() == ChatColor.BLUE) {
+                                        data = DyeColor.BLUE.getDyeData();
                                     }
-
-                                    buildBlock(finalBlocks, block, type, data);
                                 }
 
-                                this.index++;
-                            } else {
-                                this.cancel();
+                                buildBlock(finalBlocks, block, type, data);
                             }
+
+                            this.index++;
+                        } else {
+                            this.cancel();
                         }
                     }
-                }.runTaskTimer(MCCW.getInstance(), 1L, getDelay()).wait();
-            } catch (InterruptedException exception) {
-                throw new BuildingException(exception);
-            }
+                }
+            }.runTaskTimer(MCCW.getInstance(), 1L, getDelay());
         }
 
         return finalBlocks;

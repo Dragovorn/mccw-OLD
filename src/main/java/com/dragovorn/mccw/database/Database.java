@@ -23,6 +23,10 @@ public class Database {
     }
 
     public void close() {
+        if (this.client == null) {
+            return;
+        }
+
         this.client.close();
     }
 }

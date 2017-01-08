@@ -20,6 +20,7 @@ public class RightClickListener implements Listener {
                 for (Item item : player.getInventory()) {
                     if (player.getMainHand().equals(item.getItem())) {
                         item.onRightClick(player);
+                        event.setCancelled(true);
 
                         return;
                     }

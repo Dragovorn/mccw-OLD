@@ -46,7 +46,11 @@ public class Blue implements ITeam {
     public void join(MCCWPlayer player) {
         player.sendMessage(MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
 
-        // other voodoo
+        if (player.getPlayer().getDisplayName().equals("Dragovorn")) {
+            player.setPrefix("&6&lDeveloper &9");
+        } else {
+            player.setPrefix("&9");
+        }
     }
 
     @Override

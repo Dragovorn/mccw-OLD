@@ -54,7 +54,7 @@ public class MCCW extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
-        this.database = new Database(Private.dbIP, Private.dbPort, Private.dbUser, Private.db, Private.dbPassword);
+//        this.database = new Database(Private.dbIP, Private.dbPort, Private.dbUser, Private.db, Private.dbPassword);
         this.state = GameState.WAITING;
         this.schematicManager = new SchematicManager();
         this.players = new ArrayList<>();
@@ -105,8 +105,11 @@ public class MCCW extends JavaPlugin {
         this.teams = null;
         this.players = null;
         this.exp = null;
-        this.database.close();
-        this.database = null;
+
+        if (this.database != null) {
+            this.database.close();
+            this.database = null;
+        }
 
         Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(Team::unregister);
     }

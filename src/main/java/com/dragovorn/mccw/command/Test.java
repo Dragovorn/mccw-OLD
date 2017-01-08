@@ -44,6 +44,6 @@ public class Test implements CommandExecutor {
 
         stack.setItemMeta(meta);
 
-        player.getPlayer().getInventory().addItem();
+        player.getPlayer().getInventory().addItem(stack);
     }
 }

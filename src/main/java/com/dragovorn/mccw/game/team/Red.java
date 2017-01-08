@@ -46,7 +46,11 @@ public class Red implements ITeam {
     public void join(MCCWPlayer player) {
         player.sendMessage(MessageType.REGULAR, "You joined the " + getColour() + getName() + "&7 team!");
 
-        // other voodoo
+        if (player.getPlayer().getDisplayName().equals("Dragovorn")) {
+            player.setPrefix("&6&lDeveloper &c");
+        } else {
+            player.setPrefix("&c");
+        }
     }
 
     @Override
