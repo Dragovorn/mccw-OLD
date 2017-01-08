@@ -8,6 +8,7 @@ import com.dragovorn.mccw.database.Database;
 import com.dragovorn.mccw.exceptions.BuildingException;
 import com.dragovorn.mccw.exceptions.PlayerNotRegisteredException;
 import com.dragovorn.mccw.game.MCCWPlayer;
+import com.dragovorn.mccw.game.shop.item.JoinRed;
 import com.dragovorn.mccw.game.team.Blue;
 import com.dragovorn.mccw.game.team.ITeam;
 import com.dragovorn.mccw.game.team.Red;
@@ -77,7 +78,7 @@ public class MCCW extends JavaPlugin {
 
         ImmutableList.Builder<BuildingReference> builder = new ImmutableList.Builder<>();
 
-        builder.add(new BuildingReference("Town Hall", 1, true, new Schematic[] {this.schematicManager.getSchematicByName("Town Hall Level 1")}, new double[] {1000}));
+        builder.add(new BuildingReference("Town Hall", 1, true, new Schematic[] {this.schematicManager.getSchematicByName("Town Hall Level 1")}, new double[] {1000}).addItemToShop(1, new JoinRed()));
 
         this.buildingReferences = builder.build();
     }
