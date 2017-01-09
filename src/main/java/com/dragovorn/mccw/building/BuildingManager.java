@@ -43,10 +43,8 @@ public abstract class BuildingManager implements IBuildingManager {
 
                     int index = y * schematic.getWidth() * schematic.getLength() + z * schematic.getWidth() + x;
 
-                    if (block.getType() != Material.getMaterial(schematic.getBlocks()[index])) {
-                        blocks.put(block, index);
-                        allBlocks.add(block);
-                    }
+                    blocks.put(block, index);
+                    allBlocks.add(block);
                 }
             }
         }
