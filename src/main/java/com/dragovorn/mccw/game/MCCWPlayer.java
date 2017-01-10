@@ -144,6 +144,11 @@ public class MCCWPlayer {
         updateExpNextLevel();
     }
 
+    public void setClass(Class clazz) {
+        this.clazz = clazz;
+        clazz.apply(this);
+    }
+
     public void reset() {
         this.player.getInventory().clear();
         this.player.getInventory().setHelmet(null);

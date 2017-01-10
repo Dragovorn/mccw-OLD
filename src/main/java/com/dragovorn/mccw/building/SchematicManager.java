@@ -63,29 +63,29 @@ public class SchematicManager {
 
     private Schematic loadSchematic(File file) throws IOException {
         FileInputStream stream = new FileInputStream(file);
-        NBTInputStream nbtInputStream = new NBTInputStream(stream);
+        NBTInputStream nbtStream = new NBTInputStream(stream);
 
-        CompoundTag schematicTag = (CompoundTag) nbtInputStream.readTag();
+        CompoundTag schematicTag = (CompoundTag) nbtStream.readTag();
         if (!schematicTag.getName().equals("Schematic")) {
-            throw new InvalidSchematicException(file.getName() + " has no existing Schematic tag or is not first");
+            throw new IllegalArgumentException("Tag \"Schematic\" does not exist or is not first");
         }
 
         Map<String, Tag> schematic = schematicTag.getValue();
         if (!schematic.containsKey("Blocks")) {
-            throw new InvalidSchematicException(file.getName() + " is missing a Blocks tag!");
+            throw new IllegalArgumentException("Schematic file is missing a \"Blocks\" tag");
         }
 
-        byte[] blockId = getChildTag(file, schematic, "Blocks", ByteArrayTag.class).getValue();
-        byte[] blockData = getChildTag(file, schematic, "Data", ByteArrayTag.class).getValue();
-        byte[] addId = new byte[0];
+        short width = getChildTag(schematic, "Width", ShortTag.class).getValue();
+        short length = getChildTag(schematic, "Length", ShortTag.class).getValue();
+        short height = getChildTag(schematic, "Height", ShortTag.class).getValue();
 
-        short width = getChildTag(file, schematic, "Width", ShortTag.class).getValue();
-        short length = getChildTag(file, schematic, "Length", ShortTag.class).getValue();
-        short height = getChildTag(file, schematic, "Height", ShortTag.class).getValue();
+        byte[] blockId = getChildTag(schematic, "Blocks", ByteArrayTag.class).getValue();
+        byte[] blockData = getChildTag(schematic, "Data", ByteArrayTag.class).getValue();
+        byte[] addId = new byte[0];
         short[] blocks = new short[blockId.length];
 
         if (schematic.containsKey("AddBlocks")) {
-            addId = getChildTag(file, schematic, "AddBlocks", ByteArrayTag.class).getValue();
+            addId = getChildTag(schematic, "AddBlocks", ByteArrayTag.class).getValue();
         }
 
         for (int index = 0; index < blockId.length; index++) {
@@ -103,17 +103,14 @@ public class SchematicManager {
         return new Schematic(file.getName().replace(".schematic", ""), blocks, blockData, width, length, height);
     }
 
-    private <T extends Tag> T getChildTag(File file, Map<String, Tag> tags, String key, Class<T> expected) {
-        if (!tags.containsKey(key)) {
-            throw new InvalidSchematicException(file.getName() + " is missing a " + key + " tag");
+    private <T extends Tag> T getChildTag(Map<String, Tag> items, String key, Class<T> expected) throws IllegalArgumentException {
+        if (!items.containsKey(key)) {
+            throw new IllegalArgumentException("Schematic file is missing a \"" + key + "\" tag");
         }
-
-        Tag tag = tags.get(key);
-
-        if(!expected.isInstance(tag)) {
-            throw new InvalidSchematicException(key + " is not of tag type " + expected.getName());
+        Tag tag = items.get(key);
+        if (!expected.isInstance(tag)) {
+            throw new IllegalArgumentException(key + " tag is not of tag type " + expected.getName());
         }
-
         return expected.cast(tag);
     }
 }

@@ -5,16 +5,13 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class BuildingManager implements IBuildingManager {
 
     private int blocksPerTime = 1;
 
-    private long delay = 0L;
+    private long delay = 1L;
 
     public final void setBlocksPerTime(int blocksPerTime) {
         this.blocksPerTime = blocksPerTime;
@@ -37,14 +34,16 @@ public abstract class BuildingManager implements IBuildingManager {
 
         for (int x = 0; x < schematic.getWidth(); x++) {
             for (int y = 0; y < schematic.getHeight(); y++) {
-                for (int z = 0; z < schematic.getLength(); z++) {
+                for (int z = 0; z < schematic.getLength(); ++z) {
                     Location temp = location.clone().add(x, y, z);
                     Block block = temp.getBlock();
 
                     int index = y * schematic.getWidth() * schematic.getLength() + z * schematic.getWidth() + x;
 
-                    blocks.put(block, index);
-                    allBlocks.add(block);
+                    if (block.getType() != Material.getMaterial(schematic.getBlocks()[index])) {
+                        blocks.put(block, index);
+                        allBlocks.add(block);
+                    }
                 }
             }
         }
@@ -75,15 +74,7 @@ public abstract class BuildingManager implements IBuildingManager {
                             byte data = schematic.getData()[otherIndex];
 
                             if (!block.getLocation().equals(location)) {
-                                if (data == DyeColor.WHITE.getDyeData() && (Material.getMaterial(type) == Material.WOOL || Material.getMaterial(type) == Material.STAINED_GLASS || Material.getMaterial(type) == Material.STAINED_GLASS_PANE || Material.getMaterial(type) == Material.CARPET)) {
-                                    if (getTeam().getColour() == ChatColor.RED) {
-                                        data = DyeColor.RED.getDyeData();
-                                    } else if (getTeam().getColour() == ChatColor.BLUE) {
-                                        data = DyeColor.BLUE.getDyeData();
-                                    }
-                                }
-
-                                buildBlock(finalBlocks, block, type, data);
+                                buildBlock(finalBlocks, block, Material.getMaterial(type), data);
                             }
 
                             this.index++;
@@ -92,19 +83,18 @@ public abstract class BuildingManager implements IBuildingManager {
                         }
                     }
                 }
-            }.runTaskTimer(MCCW.getInstance(), 1L, getDelay());
+            }.runTaskTimer(MCCW.getInstance(), 10L, getDelay());
         }
 
         return finalBlocks;
     }
 
-    private void buildBlock(List<Block> blocks, Block block, int type, byte data) {
-        Material blockType = Material.getMaterial(type);
+    private void buildBlock(List<Block> blocks, Block block, final Material type, byte data) {
+        final Location loc = block.getLocation();
 
-        block.getLocation().getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, blockType, data);
+        loc.getWorld().playEffect(loc, Effect.STEP_SOUND, (type == Material.AIR ? block.getType().getId() : type.getId()));
+        block.setTypeIdAndData(type.getId(), data, false);
 
-        block.setType(blockType, false);
-        block.setData(data, false);
         blocks.add(block);
     }
 
