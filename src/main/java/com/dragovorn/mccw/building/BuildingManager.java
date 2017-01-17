@@ -74,6 +74,16 @@ public abstract class BuildingManager implements IBuildingManager {
                             byte data = schematic.getData()[otherIndex];
 
                             if (!block.getLocation().equals(location)) {
+                                if (Material.getMaterial(type) == Material.WOOL) {
+                                    if (data == DyeColor.WHITE.getDyeData()) {
+                                        if (getTeam().getColour() == ChatColor.BLUE) {
+                                            data = DyeColor.BLUE.getDyeData();
+                                        } else if (getTeam().getColour() == ChatColor.RED) {
+                                            data = DyeColor.RED.getDyeData();
+                                        }
+                                    }
+                                }
+
                                 buildBlock(finalBlocks, block, Material.getMaterial(type), data);
                             }
 
